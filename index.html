@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>장기 - AI 대전</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0a0a0f;color:#e8d5b0;font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* ── 오버레이 ── */
+#overlay{position:fixed;inset:0;z-index:200;background:#000000dd;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+#overlay.show{display:flex;}
+.res-emoji{font-size:5rem;animation:bounce 0.6s ease;}
+@keyframes bounce{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.res-title{font-size:2.2rem;font-weight:900;letter-spacing:.15em;}
+.res-box{background:#1a1a2e;border:2px solid #gold;border-radius:16px;padding:16px 32px;text-align:center;min-width:200px;}
+.res-score-big{font-size:2.2rem;font-weight:900;color:#fbbf24;}
+.res-hint{color:#6b7280;font-size:.8rem;margin-top:4px;}
+
+/* ── 장군 알림 ── */
+#janggun-alert{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:150;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:3px solid #ef4444;border-radius:20px;padding:20px 40px;text-align:center;font-size:2rem;font-weight:900;color:#fff;text-shadow:0 0 20px #ef4444;box-shadow:0 0 40px #ef444480;transition:transform 0.3s,opacity 0.3s;opacity:0;}
+#janggun-alert.show{transform:translate(-50%,-50%) scale(1);opacity:1;}
+#janggun-alert.ai{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-color:#3b82f6;box-shadow:0 0 40px #3b82f680;}
+
+/* ── 말 선택 화면 ── */
+#setup-screen{position:fixed;inset:0;z-index:100;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;}
+#setup-screen.hide{display:none;}
+.setup-title{font-size:1.6rem;font-weight:900;color:#fbbf24;letter-spacing:.1em;margin-bottom:4px;}
+.setup-sub{font-size:.75rem;color:#6b7280;margin-bottom:16px;}
+.setup-board{position:relative;margin:0 auto;}
+.setup-info{background:#1a1a2e;border:1px solid #2d2d4e;border-radius:10px;padding:10px 14px;width:100%;max-width:380px;margin-top:10px;font-size:.75rem;color:#9ca3af;text-align:center;}
+.setup-btn{background:linear-gradient(135deg,#b45309,#d97706);border:none;border-radius:10px;color:#fff;padding:12px 32px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:10px;letter-spacing:.05em;width:100%;max-width:380px;}
+
+/* ── 메인 게임 ── */
+#game-screen{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:8px 6px 20px;}
+#game-screen.show{display:flex;}
+
+.top-bar{width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding:8px 12px;background:#12121e;border-radius:10px;border:1px solid #1f1f3a;}
+.level-badge{display:flex;align-items:center;gap:6px;}
+.level-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.level-name{font-weight:700;font-size:.9rem;}
+.level-pts{font-size:.65rem;color:#6b7280;}
+.game-title{text-align:right;}
+.game-title h1{font-size:1.4rem;font-weight:900;letter-spacing:.2em;color:#fbbf24;}
+.game-title p{font-size:.6rem;color:#4b5563;}
+
+.progress-wrap{width:100%;max-width:420px;margin-bottom:6px;}
+.progress-row{display:flex;justify-content:space-between;font-size:.6rem;color:#4b5563;margin-bottom:2px;}
+.progress-track{height:5px;background:#1f1f1f;border-radius:3px;overflow:hidden;}
+.progress-bar{height:100%;border-radius:3px;transition:width .6s;}
+
+.player-panel{width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;margin-bottom:3px;}
+.panel-left{display:flex;align-items:center;gap:8px;}
+.panel-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.panel-name{font-size:.82rem;font-weight:700;}
+.panel-side{font-size:.62rem;color:#6b7280;}
+.panel-score-label{font-size:.62rem;color:#6b7280;}
+.panel-score-val{font-size:.95rem;font-weight:700;}
+
+.cap-row{width:100%;max-width:420px;min-height:22px;display:flex;flex-wrap:wrap;gap:2px;margin-bottom:3px;padding:0 2px;}
+
+.status-bar{width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-radius:7px;border:1px solid #2d2d4e;background:#12121e;margin-bottom:5px;font-size:.8rem;}
+.status-bar.check{background:#3a0a0a;border-color:#ef4444;animation:pulse-red 1s infinite;}
+.status-bar.check-ai{background:#0a1a3a;border-color:#3b82f6;}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 #ef444440}50%{box-shadow:0 0 0 6px #ef444400}}
+
+#board-svg{display:block;cursor:default;}
+
+.bottom-panel{width:100%;max-width:420px;display:flex;gap:6px;margin-top:6px;}
+.log-panel{flex:1;background:#0d0d1a;border:1px solid #1f1f3a;border-radius:8px;padding:6px 8px;max-height:72px;overflow-y:auto;}
+.log-entry{font-size:.65rem;margin-bottom:1px;padding:1px 0;}
+.log-empty{color:#2d2d4e;font-size:.65rem;text-align:center;padding-top:10px;}
+.side-panel{display:flex;flex-direction:column;gap:5px;}
+.btn-new{background:#1f1f2e;border:1px solid #2d2d4e;border-radius:7px;color:#e8d5b0;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap;}
+.btn-setup{background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:7px;color:#fff;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap;}
+.score-chip{background:#0d0d1a;border:1px solid #1f1f3a;border-radius:7px;padding:4px 8px;text-align:center;}
+.score-chip-label{font-size:.58rem;color:#4b5563;}
+.score-chip-val{font-size:.95rem;font-weight:700;color:#fbbf24;}
+</style>
+</head>
+<body>
+
+<!-- 장군 알림 -->
+<div id="janggun-alert"></div>
+
+<!-- 결과 오버레이 -->
+<div id="overlay">
+  <div class="res-emoji" id="res-emoji"></div>
+  <div class="res-title" id="res-title"></div>
+  <div style="font-size:.85rem;margin-top:-4px;" id="res-pts"></div>
+  <div class="res-box">
+    <div style="font-size:.7rem;color:#6b7280;margin-bottom:2px;">현재 점수</div>
+    <div class="res-score-big" id="res-score-big"></div>
+    <div style="font-size:.9rem;margin-top:4px;" id="res-rank-show"></div>
+    <div style="font-size:.7rem;color:#6b7280;margin-top:6px;" id="res-wl"></div>
+  </div>
+  <div class="res-hint">화면을 탭하여 새 게임</div>
+</div>
+
+<!-- 말 배치 선택 화면 -->
+<div id="setup-screen">
+  <div class="setup-title">장　기</div>
+  <div class="setup-sub">말 배치를 선택하세요 (초/붉은색이 당신)</div>
+  <svg id="setup-svg" style="display:block;margin:0 auto;cursor:pointer;"></svg>
+  <div class="setup-info" id="setup-info">마(馬)와 상(象)의 위치를 선택하세요.<br>현재 선택: <span id="setup-sel-label" style="color:#fbbf24;">마상상마 (기본)</span></div>
+  <button class="setup-btn" onclick="startGame()">⚔️ 대전 시작</button>
+</div>
+
+<!-- 게임 화면 -->
+<div id="game-screen">
+
+  <div class="top-bar">
+    <div class="level-badge">
+      <div class="level-icon" id="lv-icon"></div>
+      <div>
+        <div class="level-name" id="lv-name"></div>
+        <div class="level-pts" id="lv-pts"></div>
+      </div>
+    </div>
+    <div class="game-title">
+      <h1>장　기</h1>
+      <p>AI 대전</p>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-row">
+      <span id="prog-cur-label"></span>
+      <span id="prog-next-label"></span>
+    </div>
+    <div class="progress-track"><div class="progress-bar" id="prog-bar"></div></div>
+  </div>
+
+  <!-- AI 패널 -->
+  <div class="player-panel" style="background:#0d1a2e;border:1px solid #1e3a5f;">
+    <div class="panel-left">
+      <div class="panel-avatar" style="background:linear-gradient(135deg,#1e3a8a,#1e40af);border:2px solid #3b82f6;">🤖</div>
+      <div>
+        <div class="panel-name" style="color:#93c5fd;">AI 장군</div>
+        <div class="panel-side">한(漢) · 파란색 · <span id="ai-level-label"></span></div>
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div class="panel-score-label">잡은 기물</div>
+      <div class="panel-score-val" style="color:#ef4444;" id="ai-cap-score">0점</div>
+    </div>
+  </div>
+
+  <!-- AI가 잡은 기물 -->
+  <div class="cap-row" id="cap-by-ai"></div>
+
+  <!-- 상태바 -->
+  <div class="status-bar" id="status-bar">
+    <div id="status-left" style="display:flex;align-items:center;gap:6px;font-weight:600;">🔴 당신의 차례</div>
+    <div style="font-size:.68rem;color:#4b5563;" id="move-count-el">0수</div>
+  </div>
+
+  <!-- 장기판 -->
+  <svg id="board-svg"></svg>
+
+  <!-- 내가 잡은 기물 -->
+  <div class="cap-row" id="cap-by-player"></div>
+
+  <!-- 플레이어 패널 -->
+  <div class="player-panel" style="background:#1a0d0d;border:1px solid #5f1e1e;">
+    <div class="panel-left">
+      <div class="panel-avatar" id="player-avatar" style="border:2px solid #9ca3af;"></div>
+      <div>
+        <div class="panel-name" style="color:#fca5a5;">나 (플레이어)</div>
+        <div class="panel-side">초(楚) · 붉은색</div>
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div class="panel-score-label">잡은 기물</div>
+      <div class="panel-score-val" style="color:#22c55e;" id="player-cap-score">0점</div>
+    </div>
+  </div>
+
+  <div class="bottom-panel">
+    <div class="log-panel" id="log-panel"><div class="log-empty">기보가 여기에 표시됩니다</div></div>
+    <div class="side-panel">
+      <button class="btn-new" onclick="resetGame()">↺ 새 게임</button>
+      <button class="btn-setup" onclick="goSetup()">⚙️ 배치</button>
+      <div class="score-chip">
+        <div class="score-chip-label">총 점수</div>
+        <div class="score-chip-val" id="total-score-el">0</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /game-screen -->
+
+<script>
+// ════════════════════════════════════════════
+// 상수 & 데이터
+// ════════════════════════════════════════════
+const CELL = 38, PAD = 26;
+const BW = CELL*8+PAD*2, BH = CELL*9+PAD*2;
+const cx = c => PAD+c*CELL, cy = r => PAD+r*CELL;
+const NS = 'http://www.w3.org/2000/svg';
+
+// 기물 크기 등급
+const PIECE_SIZE = { 궁:22, 차:18, 포:17, 마:16, 상:15, 사:14, 졸:13, 병:13 };
+const PIECE_FONT = { 궁:13, 차:11, 포:11, 마:11, 상:10, 사:10, 졸:10, 병:10 };
+const PIECE_COLOR_CHO = { 궁:'#ff4444', 차:'#ff6600', 포:'#ff8800', 마:'#ffaa00', 상:'#dd8800', 사:'#cc6600', 졸:'#aa5500', 병:'#aa5500' };
+const PIECE_COLOR_HAN = { 궁:'#7ab8ff', 차:'#a8c8ff', 포:'#bcd4ff', 마:'#cfe0ff', 상:'#bcd4ff', 사:'#dce8ff', 졸:'#eef4ff', 병:'#eef4ff' };
+
+const PIECE_INFO = {
+  '궁초':{han:'將',name:'궁',cho:true,value:0,label:'장(將)'},
+  '차초':{han:'車',name:'차',cho:true,value:13,label:'차(車)'},
+  '포초':{han:'砲',name:'포',cho:true,value:7,label:'포(砲)'},
+  '마초':{han:'馬',name:'마',cho:true,value:5,label:'마(馬)'},
+  '상초':{han:'象',name:'상',cho:true,value:3,label:'상(象)'},
+  '사초':{han:'士',name:'사',cho:true,value:3,label:'사(士)'},
+  '졸초':{han:'卒',name:'졸',cho:true,value:2,label:'졸(卒)'},
+  '궁한':{han:'將',name:'궁',cho:false,value:0,label:'장(將)'},
+  '차한':{han:'車',name:'차',cho:false,value:13,label:'차(車)'},
+  '포한':{han:'砲',name:'포',cho:false,value:7,label:'포(砲)'},
+  '마한':{han:'馬',name:'마',cho:false,value:5,label:'마(馬)'},
+  '상한':{han:'象',name:'상',cho:false,value:3,label:'상(象)'},
+  '사한':{han:'士',name:'사',cho:false,value:3,label:'사(士)'},
+  '병한':{han:'卒',name:'병',cho:false,value:2,label:'병(兵)'},
+};
+
+// 배치 옵션 (초 기준 왼쪽부터: 마상상마 / 상마마상 / 마상마상 / 상마상마)
+const SETUP_OPTIONS = [
+  {label:'마상상마',left:['마','상'],right:['상','마']},
+  {label:'상마마상',left:['상','마'],right:['마','상']},
+  {label:'마상마상',left:['마','상'],right:['마','상']},
+  {label:'상마상마',left:['상','마'],right:['상','마']},
+];
+
+const LEVELS = [
+  {min:0,  label:'입문', icon:'🥋',color:'#9ca3af',depth:1},
+  {min:20, label:'초보', icon:'🪖',color:'#78716c',depth:1},
+  {min:60, label:'하수', icon:'⚔️',color:'#d97706',depth:2},
+  {min:130,label:'중수', icon:'🛡️',color:'#059669',depth:2},
+  {min:220,label:'고수', icon:'🏹',color:'#0284c7',depth:3},
+  {min:360,label:'명인', icon:'💠',color:'#6366f1',depth:3},
+  {min:540,label:'국수', icon:'🌟',color:'#7c3aed',depth:4},
+  {min:800,label:'기성', icon:'👑',color:'#d97706',depth:4},
+];
+function getLevel(s){let l=LEVELS[0];for(const x of LEVELS){if(s>=x.min)l=x;else break;}return l;}
+function getLevelIdx(s){let i=0;for(let j=0;j<LEVELS.length;j++){if(s>=LEVELS[j].min)i=j;else break;}return i;}
+
+// ════════════════════════════════════════════
+// 게임 상태
+// ════════════════════════════════════════════
+let board, selected, legalMoves, playerTurn, aiThinking, lastMove;
+let capByPlayer, capByAI, gameOver, score, wins, losses, moveCount, gameLog;
+let setupChoice = 0; // 현재 선택된 배치
+let aiTimer = null;
+
+// ════════════════════════════════════════════
+// 말 배치 화면
+// ════════════════════════════════════════════
+function renderSetup(){
+  const svg = document.getElementById('setup-svg');
+  const S = 32, P = 20;
+  const W = S*8+P*2, H = S*2+P*2+30;
+  svg.setAttribute('width',W); svg.setAttribute('height',H);
+  svg.innerHTML='';
+  const bg = el('rect',{x:0,y:0,width:W,height:H,rx:8,fill:'#1a1208'});
+  svg.appendChild(bg);
+  // 배치 버튼들
+  SETUP_OPTIONS.forEach((opt,idx)=>{
+    const bx = P+idx*(S*2+6), by = P;
+    const sel = idx===setupChoice;
+    const g = document.createElementNS(NS,'g');
+    g.style.cursor='pointer';
+    g.addEventListener('click',()=>{setupChoice=idx;renderSetup();});
+    g.appendChild(el('rect',{x:bx-4,y:by-4,width:S*2+8,height:S*2+8,rx:6,
+      fill:sel?'#2a1f0a':'#111',stroke:sel?'#fbbf24':'#333','stroke-width':sel?2:1}));
+    // 한자로 배치 표시
+    const labels = [opt.left[0],'','','','','','',opt.right[0]];
+    ['馬','象','象','馬'].forEach((h,i)=>{}); // dummy
+    // 미니 보드 그리기: 4개 말
+    const pieces = [
+      {h:opt.left[0]==='마'?'馬':'象',x:bx,y:by,cho:true},
+      {h:opt.left[1]==='마'?'馬':'象',x:bx+S,y:by,cho:true},
+      {h:opt.right[0]==='마'?'馬':'象',x:bx,y:by+S,cho:true},
+      {h:opt.right[1]==='마'?'馬':'象',x:bx+S,y:by+S,cho:true},
+    ];
+    pieces.forEach(({h,x,y})=>{
+      g.appendChild(el('circle',{cx:x+S/2,cy:y+S/2,r:12,fill:'#450a0a',stroke:'#ef4444','stroke-width':1.5}));
+      const t=document.createElementNS(NS,'text');
+      t.setAttribute('x',x+S/2);t.setAttribute('y',y+S/2+1);
+      t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');
+      t.setAttribute('font-size',10);t.setAttribute('font-weight','700');
+      t.setAttribute('font-family','serif');t.setAttribute('fill','#fca5a5');
+      t.textContent=h;
+      g.appendChild(t);
+    });
+    // 라벨
+    const lt=document.createElementNS(NS,'text');
+    lt.setAttribute('x',bx+S);lt.setAttribute('y',by+S*2+16);
+    lt.setAttribute('text-anchor','middle');lt.setAttribute('font-size',9);
+    lt.setAttribute('fill',sel?'#fbbf24':'#6b7280');lt.setAttribute('font-family','sans-serif');
+    lt.textContent=opt.label;
+    g.appendChild(lt);
+    svg.appendChild(g);
+  });
+  document.getElementById('setup-sel-label').textContent=SETUP_OPTIONS[setupChoice].label;
+}
+
+function buildBoard(choiceIdx){
+  const b=Array(10).fill(null).map(()=>Array(9).fill(null));
+  const opt=SETUP_OPTIONS[choiceIdx];
+  // 한(AI, 위)
+  const ai_l = opt.left[0]==='마'?'마한':'상한';
+  const ai_l2= opt.left[1]==='마'?'마한':'상한';
+  const ai_r = opt.right[0]==='마'?'마한':'상한';
+  const ai_r2= opt.right[1]==='마'?'마한':'상한';
+  b[0][0]='차한';b[0][1]=ai_l;b[0][2]=ai_l2;b[0][3]='사한';
+  b[0][5]='사한';b[0][6]=ai_r;b[0][7]=ai_r2;b[0][8]='차한';
+  b[1][4]='궁한';
+  b[2][1]='포한';b[2][7]='포한';
+  b[3][0]='병한';b[3][2]='병한';b[3][4]='병한';b[3][6]='병한';b[3][8]='병한';
+  // 초(플레이어, 아래)
+  const p_l = opt.left[0]==='마'?'마초':'상초';
+  const p_l2= opt.left[1]==='마'?'마초':'상초';
+  const p_r = opt.right[0]==='마'?'마초':'상초';
+  const p_r2= opt.right[1]==='마'?'마초':'상초';
+  b[6][0]='졸초';b[6][2]='졸초';b[6][4]='졸초';b[6][6]='졸초';b[6][8]='졸초';
+  b[7][1]='포초';b[7][7]='포초';
+  b[8][4]='궁초';
+  b[9][0]='차초';b[9][1]=p_l;b[9][2]=p_l2;b[9][3]='사초';
+  b[9][5]='사초';b[9][6]=p_r;b[9][7]=p_r2;b[9][8]='차초';
+  return b;
+}
+
+// ════════════════════════════════════════════
+// 장기 규칙
+// ════════════════════════════════════════════
+function getSide(p){if(!p)return null;return p.endsWith('초')?'cho':'han';}
+function inB(r,c){return r>=0&&r<10&&c>=0&&c<9;}
+function inPH(r,c){return r>=0&&r<=2&&c>=3&&c<=5;}
+function inPC(r,c){return r>=7&&r<=9&&c>=3&&c<=5;}
+const HD=new Set(['0,3','0,5','1,4','2,3','2,5']);
+const CD=new Set(['7,3','7,5','8,4','9,3','9,5']);
+function diagOk(r,c,nr,nc){
+  const k=r+','+c,nk=nr+','+nc;
+  if(inPH(r,c)&&inPH(nr,nc))return HD.has(k)&&HD.has(nk);
+  if(inPC(r,c)&&inPC(nr,nc))return CD.has(k)&&CD.has(nk);
+  return false;
+}
+function pn(p){
+  if(!p)return null;
+  return PIECE_INFO[p]?.name||null;
+}
+
+function getMoves(bd,r,c){
+  const piece=bd[r][c];if(!piece)return[];
+  const side=getSide(piece);const name=pn(piece);const moves=[];
+  const ok=(nr,nc)=>inB(nr,nc)&&getSide(bd[nr][nc])!==side;
+  if(name==='차'){
+    for(const[dr,dc]of[[-1,0],[1,0],[0,-1],[0,1]]){
+      let nr=r+dr,nc=c+dc;
+      while(inB(nr,nc)){if(bd[nr][nc]){if(getSide(bd[nr][nc])!==side)moves.push([nr,nc]);break;}moves.push([nr,nc]);nr+=dr;nc+=dc;}
+    }
+    for(const[dr,dc]of[[-1,-1],[-1,1],[1,-1],[1,1]]){const nr=r+dr,nc=c+dc;if(diagOk(r,c,nr,nc)&&ok(nr,nc))moves.push([nr,nc]);}
+  }
+  else if(name==='포'){
+    for(const[dr,dc]of[[-1,0],[1,0],[0,-1],[0,1]]){
+      let nr=r+dr,nc=c+dc,fs=false;
+      while(inB(nr,nc)){if(bd[nr][nc]){if(pn(bd[nr][nc])!=='포')fs=true;nr+=dr;nc+=dc;break;}nr+=dr;nc+=dc;}
+      if(!fs)continue;
+      while(inB(nr,nc)){if(bd[nr][nc]){if(getSide(bd[nr][nc])!==side&&pn(bd[nr][nc])!=='포')moves.push([nr,nc]);break;}moves.push([nr,nc]);nr+=dr;nc+=dc;}
+    }
+  }
+  else if(name==='마'){
+    for(const[b,e]of[[[-1,0],[-2,-1]],[[-1,0],[-2,1]],[[1,0],[2,-1]],[[1,0],[2,1]],[[0,-1],[-1,-2]],[[0,-1],[1,-2]],[[0,1],[-1,2]],[[0,1],[1,2]]]){
+      if(bd[r+b[0]]?.[c+b[1]])continue;const nr=r+e[0],nc=c+e[1];if(ok(nr,nc))moves.push([nr,nc]);
+    }
+  }
+  else if(name==='상'){
+    for(const[b1,b2,e]of[[[-1,0],[-2,-1],[-3,-2]],[[-1,0],[-2,1],[-3,2]],[[1,0],[2,-1],[3,-2]],[[1,0],[2,1],[3,2]],[[0,-1],[-1,-2],[-2,-3]],[[0,-1],[1,-2],[2,-3]],[[0,1],[-1,2],[-2,3]],[[0,1],[1,2],[2,3]]]){
+      if(bd[r+b1[0]]?.[c+b1[1]])continue;if(bd[r+b2[0]]?.[c+b2[1]])continue;const nr=r+e[0],nc=c+e[1];if(ok(nr,nc))moves.push([nr,nc]);
+    }
+  }
+  else if(name==='궁'||name==='사'){
+    const inP=side==='han'?inPH:inPC;
+    for(const[dr,dc]of[[-1,0],[1,0],[0,-1],[0,1]]){const nr=r+dr,nc=c+dc;if(inP(nr,nc)&&ok(nr,nc))moves.push([nr,nc]);}
+    for(const[dr,dc]of[[-1,-1],[-1,1],[1,-1],[1,1]]){const nr=r+dr,nc=c+dc;if(diagOk(r,c,nr,nc)&&inP(nr,nc)&&ok(nr,nc))moves.push([nr,nc]);}
+  }
+  else if(name==='졸'||name==='병'){
+    // 졸(초): 위(fwd=-1) / 병(한): 아래(fwd=+1), 양쪽으로 이동
+    const fwd=side==='cho'?-1:1;
+    for(const[dr,dc]of[[fwd,0],[0,-1],[0,1]]){const nr=r+dr,nc=c+dc;if(ok(nr,nc))moves.push([nr,nc]);}
+    for(const[dr,dc]of[[-1,-1],[-1,1],[1,-1],[1,1]]){const nr=r+dr,nc=c+dc;if(diagOk(r,c,nr,nc)&&ok(nr,nc))moves.push([nr,nc]);}
+  }
+  return moves;
+}
+
+function applyMove(bd,from,to){const nb=bd.map(r=>[...r]);nb[to[0]][to[1]]=nb[from[0]][from[1]];nb[from[0]][from[1]]=null;return nb;}
+
+function isInCheck(bd,side){
+  const king=side==='cho'?'궁초':'궁한';
+  let kr=-1,kc=-1;
+  for(let r=0;r<10;r++)for(let c=0;c<9;c++)if(bd[r][c]===king){kr=r;kc=c;}
+  if(kr===-1)return true;
+  const opp=side==='cho'?'han':'cho';
+  for(let r=0;r<10;r++)for(let c=0;c<9;c++)if(getSide(bd[r][c])===opp)if(getMoves(bd,r,c).some(([mr,mc])=>mr===kr&&mc===kc))return true;
+  return false;
+}
+
+function getLegalMoves(bd,r,c){
+  const side=getSide(bd[r][c]);if(!side)return[];
+  return getMoves(bd,r,c).filter(([nr,nc])=>!isInCheck(applyMove(bd,[r,c],[nr,nc]),side));
+}
+
+function getAllLegal(bd,side){
+  const moves=[];
+  for(let r=0;r<10;r++)for(let c=0;c<9;c++)if(getSide(bd[r][c])===side)for(const to of getLegalMoves(bd,r,c))moves.push({from:[r,c],to});
+  return moves;
+}
+
+// ── AI ──
+const PV={차:130,포:70,마:50,상:30,사:30,졸:20,병:20,궁:10000};
+function evaluate(bd){
+  let s=0;
+  for(let r=0;r<10;r++)for(let c=0;c<9;c++){
+    const p=bd[r][c];if(!p)continue;
+    const name=pn(p);
+    const val=PV[name]||0;
+    const isCho=getSide(p)==='cho';
+    // 기물 가치
+    s+=isCho?-val:val;
+    // 기동성 보너스 (이동 가능 수)
+    const mob=getMoves(bd,r,c).length;
+    s+=isCho?-mob*0.5:mob*0.5;
+    // 졸/병 전진 보너스
+    if(name==='졸')s+=isCho?(9-r)*1.5:0;
+    if(name==='병')s+=isCho?0:r*1.5;
+    // 차 중앙 컬럼 보너스
+    if(name==='차'&&c>=3&&c<=5)s+=isCho?-3:3;
+  }
+  return s;
+}
+// 수 정렬 (캡처 먼저 → 가지치기 효율 향상)
+function sortMoves(bd,moves){
+  return moves.sort((a,b)=>{
+    const va=bd[a.to[0]][a.to[1]]?PV[pn(bd[a.to[0]][a.to[1]])]||0:0;
+    const vb=bd[b.to[0]][b.to[1]]?PV[pn(bd[b.to[0]][b.to[1]])]||0:0;
+    return vb-va;
+  });
+}
+let aiDeadline = Infinity;
+const TIME_UP = Symbol('time_up');
+function minimax(bd,depth,alpha,beta,maximizing){
+  if(performance.now()>aiDeadline)throw TIME_UP;
+  if(depth===0)return{score:evaluate(bd)};
+  const side=maximizing?'han':'cho';
+  const moves=sortMoves(bd,getAllLegal(bd,side));
+  if(moves.length===0)return{score:maximizing?-99999:99999};
+  let best=null;
+  if(maximizing){
+    let bs=-Infinity;
+    for(const m of moves){const{score}=minimax(applyMove(bd,m.from,m.to),depth-1,alpha,beta,false);if(score>bs){bs=score;best=m;}alpha=Math.max(alpha,score);if(beta<=alpha)break;}
+    return{score:bs,move:best};
+  }else{
+    let bs=Infinity;
+    for(const m of moves){const{score}=minimax(applyMove(bd,m.from,m.to),depth-1,alpha,beta,true);if(score<bs){bs=score;best=m;}beta=Math.min(beta,score);if(beta<=alpha)break;}
+    return{score:bs,move:best};
+  }
+}
+
+// 반복 심화: depth 1부터 점점 깊게 계산하다가 시간 제한에 닿으면
+// 마지막으로 완성된 깊이의 결과를 사용. 어떤 레벨에서도 응답 지연이 없음.
+function findBestMove(bd,maxDepth,timeBudgetMs){
+  aiDeadline = performance.now()+timeBudgetMs;
+  let lastGood = null;
+  for(let d=1;d<=maxDepth;d++){
+    try{
+      const res = minimax(bd,d,-Infinity,Infinity,true);
+      lastGood = res; // 이 깊이는 시간 내에 완료됨
+    }catch(e){
+      if(e===TIME_UP)break; // 이전 깊이 결과(lastGood)를 그대로 사용
+      throw e;
+    }
+  }
+  return lastGood || {move:null};
+}
+
+// ════════════════════════════════════════════
+// SVG 헬퍼
+// ════════════════════════════════════════════
+function el(tag,attrs){
+  const e=document.createElementNS(NS,tag);
+  for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);
+  return e;
+}
+function txt(content,attrs){
+  const t=document.createElementNS(NS,'text');
+  for(const[k,v]of Object.entries(attrs))t.setAttribute(k,v);
+  t.textContent=content;
+  return t;
+}
+
+// ════════════════════════════════════════════
+// 보드 렌더링
+// ════════════════════════════════════════════
+function renderBoard(){
+  const svg=document.getElementById('board-svg');
+  svg.setAttribute('width',BW);svg.setAttribute('height',BH);
+  svg.innerHTML='';
+
+  // 판 배경 그라데이션
+  const defs=document.createElementNS(NS,'defs');
+  const grad=document.createElementNS(NS,'radialGradient');
+  grad.setAttribute('id','bggrad');grad.setAttribute('cx','50%');grad.setAttribute('cy','50%');grad.setAttribute('r','60%');
+  const s1=document.createElementNS(NS,'stop');s1.setAttribute('offset','0%');s1.setAttribute('stop-color','#2e1f08');
+  const s2=document.createElementNS(NS,'stop');s2.setAttribute('offset','100%');s2.setAttribute('stop-color','#1a1005');
+  grad.appendChild(s1);grad.appendChild(s2);defs.appendChild(grad);
+
+  // 기물 그림자 필터
+  const filt=document.createElementNS(NS,'filter');
+  filt.setAttribute('id','shadow');filt.setAttribute('x','-30%');filt.setAttribute('y','-30%');filt.setAttribute('width','160%');filt.setAttribute('height','160%');
+  const fe=document.createElementNS(NS,'feDropShadow');
+  fe.setAttribute('dx','1');fe.setAttribute('dy','2');fe.setAttribute('stdDeviation','2');fe.setAttribute('flood-color','#000');fe.setAttribute('flood-opacity','0.7');
+  filt.appendChild(fe);defs.appendChild(filt);
+
+  // 글로우 필터
+  const glow=document.createElementNS(NS,'filter');
+  glow.setAttribute('id','glow');
+  const feg=document.createElementNS(NS,'feGaussianBlur');
+  feg.setAttribute('stdDeviation','3');feg.setAttribute('result','coloredBlur');
+  const fem=document.createElementNS(NS,'feMerge');
+  const n1=document.createElementNS(NS,'feMergeNode');n1.setAttribute('in','coloredBlur');
+  const n2=document.createElementNS(NS,'feMergeNode');n2.setAttribute('in','SourceGraphic');
+  fem.appendChild(n1);fem.appendChild(n2);
+  glow.appendChild(feg);glow.appendChild(fem);
+  defs.appendChild(glow);
+  svg.appendChild(defs);
+
+  // 판 배경
+  svg.appendChild(el('rect',{x:0,y:0,width:BW,height:BH,rx:10,fill:'#0a0a0f'}));
+  svg.appendChild(el('rect',{x:PAD-10,y:PAD-10,width:BW-PAD*2+20,height:BH-PAD*2+20,rx:6,fill:'url(#bggrad)',stroke:'#5a3a10','stroke-width':2}));
+
+  // 격자선
+  for(let r=0;r<10;r++)svg.appendChild(el('line',{x1:cx(0),y1:cy(r),x2:cx(8),y2:cy(r),stroke:'#6a4a20','stroke-width':0.8,opacity:0.7}));
+  for(let c=0;c<9;c++)svg.appendChild(el('line',{x1:cx(c),y1:cy(0),x2:cx(c),y2:cy(9),stroke:'#6a4a20','stroke-width':0.8,opacity:0.7}));
+
+  // 강
+  svg.appendChild(el('rect',{x:cx(0)+1,y:cy(4)+5,width:cx(8)-cx(0)-2,height:cy(5)-cy(4)-10,fill:'#0d0a05',stroke:'#4a3010','stroke-width':0.5,opacity:0.6}));
+  svg.appendChild(txt('楚  河',{x:(cx(0)+cx(3.5))/2,y:cy(4)+(cy(5)-cy(4))/2+4,'text-anchor':'middle',fill:'#5a3510','font-size':9,'font-family':'serif',opacity:0.7}));
+  svg.appendChild(txt('漢  界',{x:(cx(4.5)+cx(8))/2,y:cy(4)+(cy(5)-cy(4))/2+4,'text-anchor':'middle',fill:'#5a3510','font-size':9,'font-family':'serif',opacity:0.7}));
+
+  // 궁성 대각선
+  [[3,0,5,2],[5,0,3,2],[3,7,5,9],[5,7,3,9]].forEach(([c1,r1,c2,r2])=>{
+    svg.appendChild(el('line',{x1:cx(c1),y1:cy(r1),x2:cx(c2),y2:cy(r2),stroke:'#8a6030','stroke-width':1,opacity:0.8}));
+  });
+
+  // 포 위치 마크
+  [[2,1],[2,7],[7,1],[7,7]].forEach(([r,c])=>{
+    [[-4,-4,4,4],[-4,4,4,-4]].forEach(([x1,y1,x2,y2])=>
+      svg.appendChild(el('line',{x1:cx(c)+x1,y1:cy(r)+y1,x2:cx(c)+x2,y2:cy(r)+y2,stroke:'#6a4a20','stroke-width':0.8,opacity:0.6}))
+    );
+  });
+
+  // 마지막 수 하이라이트
+  if(lastMove){
+    [lastMove.from,lastMove.to].forEach(([r,c])=>{
+      svg.appendChild(el('rect',{x:cx(c)-CELL/2,y:cy(r)-CELL/2,width:CELL,height:CELL,fill:'#fbbf2412',rx:3}));
+    });
+  }
+
+  // 이동 가능 표시
+  legalMoves.forEach(([r,c])=>{
+    const piece=board[r][c];
+    if(piece&&getSide(piece)==='han'){
+      // 적 기물 - 빨간 링
+      svg.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:PIECE_SIZE[pn(piece)]||14,fill:'none',stroke:'#ff4444','stroke-width':2.5,'stroke-dasharray':'3 2',opacity:.95}));
+    }else{
+      // 빈 칸 - 초록 점
+      svg.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:4,fill:'#22c55e',opacity:.9}));
+    }
+  });
+
+  // 기물 렌더링
+  for(let r=0;r<10;r++)for(let c=0;c<9;c++){
+    const piece=board[r][c];if(!piece)continue;
+    const isCho=getSide(piece)==='cho';
+    const name=pn(piece);
+    const sel=selected&&selected[0]===r&&selected[1]===c;
+    const R=PIECE_SIZE[name]||14;
+    const fs=PIECE_FONT[name]||10;
+    const colBase=isCho?PIECE_COLOR_CHO[name]:PIECE_COLOR_HAN[name];
+    const g=document.createElementNS(NS,'g');
+    g.style.cursor='pointer';
+    g.style.touchAction='manipulation';
+    g.setAttribute('pointer-events','all');
+    {
+      const rr=r,cc=c;
+      let handled=false;
+      const fire=(e)=>{ e.preventDefault(); e.stopPropagation(); if(handled)return; handled=true; setTimeout(()=>handled=false,300); handlePieceClick(rr,cc); };
+      g.addEventListener('click',fire);
+      g.addEventListener('pointerdown',fire);
+      g.addEventListener('touchstart',fire,{passive:false});
+    }
+
+    // 선택 글로우
+    if(sel){
+      g.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:R+7,fill:isCho?'#ff444430':'#4488ff30','filter':'url(#glow)'}));
+      g.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:R+4,fill:'none',stroke:'#fbbf24','stroke-width':2.5,opacity:.95}));
+    }
+
+    // 그림자
+    g.appendChild(el('circle',{cx:cx(c)+1.5,cy:cy(r)+2.5,r:R,fill:'#00000080'}));
+
+    // 기물 외곽 (테두리 링)
+    g.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:R,fill:isCho?'#1a0000':'#000d1a',stroke:colBase,'stroke-width':sel?2.5:2}));
+
+    // 기물 내부 원 (크기에 따라 다른 느낌)
+    const innerR = R*0.75;
+    // 내부 그라디언트 효과 (방사형 밝기)
+    g.appendChild(el('circle',{cx:cx(c)-R*0.2,cy:cy(r)-R*0.2,r:R*0.4,fill:'#ffffff18'}));
+
+    // 장(將)은 특별히 더 화려하게
+    if(name==='궁'){
+      // 외곽 장식 링
+      g.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:R-3,fill:'none',stroke:colBase,'stroke-width':0.8,opacity:0.5}));
+      // 빛나는 외곽
+      g.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:R,fill:'none',stroke:isCho?'#ff8888':'#88aaff','stroke-width':1,opacity:0.6,'filter':'url(#glow)'}));
+    }else{
+      // 일반 기물 내부 라인
+      g.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:innerR,fill:'none',stroke:colBase,'stroke-width':0.6,opacity:0.4}));
+    }
+
+    // 한자
+    const t=document.createElementNS(NS,'text');
+    t.setAttribute('x',cx(c));t.setAttribute('y',cy(r)+1);
+    t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');
+    t.setAttribute('font-size',fs);t.setAttribute('font-weight','900');
+    t.setAttribute('font-family',"'Noto Serif KR',serif");
+    t.setAttribute('fill',colBase);
+    t.style.userSelect='none';
+    t.textContent=PIECE_INFO[piece]?.han;
+    g.appendChild(t);
+
+    // 장(將) 아래 작은 텍스트
+    if(name==='궁'){
+      const sub=document.createElementNS(NS,'text');
+      sub.setAttribute('x',cx(c));sub.setAttribute('y',cy(r)+R-3);
+      sub.setAttribute('text-anchor','middle');sub.setAttribute('dominant-baseline','middle');
+      sub.setAttribute('font-size',5);sub.setAttribute('fill',colBase);sub.setAttribute('opacity','0.7');
+      sub.setAttribute('font-family','sans-serif');
+      sub.textContent=isCho?'楚將':'漢將';
+      g.appendChild(sub);
+    }
+
+    svg.appendChild(g);
+  }
+
+  // 빈 칸 클릭 레이어
+  for(let r=0;r<10;r++)for(let c=0;c<9;c++){
+    if(board[r][c])continue;
+    const hit=el('rect',{x:cx(c)-CELL/2,y:cy(r)-CELL/2,width:CELL,height:CELL,fill:'#00000001'});
+    hit.style.cursor='pointer';
+    hit.style.touchAction='manipulation';
+    hit.setAttribute('pointer-events','all');
+    {
+      const rr=r,cc=c;
+      let handled=false;
+      const fire=(e)=>{ e.preventDefault(); e.stopPropagation(); if(handled)return; handled=true; setTimeout(()=>handled=false,300); handleCellClick(rr,cc); };
+      hit.addEventListener('click',fire);
+      hit.addEventListener('pointerdown',fire);
+      hit.addEventListener('touchstart',fire,{passive:false});
+    }
+    svg.appendChild(hit);
+  }
+}
+
+// ════════════════════════════════════════════
+// UI 업데이트
+// ════════════════════════════════════════════
+function updateUI(){
+  const lv=getLevel(score);
+  const lvIdx=getLevelIdx(score);
+  const nextLv=LEVELS[lvIdx+1];
+  const prog=nextLv?Math.min(100,((score-lv.min)/(nextLv.min-lv.min))*100):100;
+
+  // 레벨
+  const icon=document.getElementById('lv-icon');
+  icon.textContent=lv.icon;icon.style.background=`linear-gradient(135deg,${lv.color}44,${lv.color}22)`;icon.style.border=`2px solid ${lv.color}`;
+  document.getElementById('lv-name').textContent=lv.label;document.getElementById('lv-name').style.color=lv.color;
+  document.getElementById('lv-pts').textContent=`${score}점 · ${wins}승 ${losses}패`;
+  document.getElementById('ai-level-label').textContent=lv.label+' AI';
+
+  // 프로그레스
+  document.getElementById('prog-cur-label').textContent=`${lv.label} ${lv.min}점`;
+  document.getElementById('prog-next-label').textContent=nextLv?`다음: ${nextLv.icon}${nextLv.label} (${nextLv.min}점)`:'최고 레벨!';
+  const pb=document.getElementById('prog-bar');pb.style.width=prog+'%';pb.style.background=`linear-gradient(90deg,${lv.color},${lv.color}bb)`;
+
+  // 플레이어 아바타
+  const pav=document.getElementById('player-avatar');
+  pav.textContent=lv.icon;pav.style.background=`linear-gradient(135deg,${lv.color}33,${lv.color}11)`;pav.style.borderColor=lv.color;
+
+  // 점수
+  const pScore=capByPlayer.reduce((s,p)=>s+(PIECE_INFO[p]?.value||0),0);
+  const aScore=capByAI.reduce((s,p)=>s+(PIECE_INFO[p]?.value||0),0);
+  document.getElementById('player-cap-score').textContent=pScore+'점';
+  document.getElementById('ai-cap-score').textContent=aScore+'점';
+  document.getElementById('total-score-el').textContent=score;
+  document.getElementById('move-count-el').textContent=moveCount+'수';
+
+  // 잡은 기물
+  document.getElementById('cap-by-ai').innerHTML=capByAI.map(p=>{
+    const n=pn(p);const col=PIECE_COLOR_CHO[n]||'#fca5a5';
+    return `<div style="background:#1a0000;border:1px solid ${col}44;border-radius:4px;padding:1px 5px;font-size:11px;font-family:serif;color:${col};font-weight:700;">${PIECE_INFO[p]?.han}</div>`;
+  }).join('');
+  document.getElementById('cap-by-player').innerHTML=capByPlayer.map(p=>{
+    const n=pn(p);const col=PIECE_COLOR_HAN[n]||'#93c5fd';
+    return `<div style="background:#000d1a;border:1px solid ${col}44;border-radius:4px;padding:1px 5px;font-size:11px;font-family:serif;color:${col};font-weight:700;">${PIECE_INFO[p]?.han}</div>`;
+  }).join('');
+
+  // 상태바
+  const sb=document.getElementById('status-bar');
+  const sl=document.getElementById('status-left');
+  sb.className='status-bar';
+  if(aiThinking){
+    sl.innerHTML='<span style="color:#93c5fd">🤔 AI 계산 중...</span>';
+  }else if(playerTurn==='check_me'){
+    sb.classList.add('check');
+    sl.innerHTML='⚠️ <span style="color:#fca5a5;font-weight:700">장군!</span>';
+  }else if(playerTurn==='check_ai'){
+    sb.classList.add('check-ai');
+    sl.innerHTML='⚔️ <span style="color:#86efac;font-weight:700">장군! 몰아붙이세요</span>';
+  }else{
+    sl.innerHTML=playerTurn==='cho'||playerTurn==='check_me'
+      ?'🔴 <span style="color:#fca5a5">당신의 차례</span>'
+      :'🔵 <span style="color:#93c5fd">AI 차례...</span>';
+  }
+
+  // 로그
+  const lb=document.getElementById('log-panel');
+  if(gameLog.length===0){lb.innerHTML='<div class="log-empty">기보가 여기에 표시됩니다</div>';}
+  else{lb.innerHTML=gameLog.map((l,i)=>`<div class="log-entry" style="color:${i===0?'#e8d5b0':'#4b5563'}">${l}</div>`).join('');}
+
+  renderBoard();
+}
+
+// ════════════════════════════════════════════
+// 장군 알림
+// ════════════════════════════════════════════
+function showJanggun(playerIsInCheck){
+  const a=document.getElementById('janggun-alert');
+  if(playerIsInCheck){
+    // 내가 장군 당함 → 빨간색 "장군!"
+    a.className='show';
+    a.textContent='장군! ⚠️';
+  }else{
+    // AI가 장군 당함 → 파란색 "멍군!"
+    a.className='show ai';
+    a.textContent='멍군! ⚔️';
+  }
+  setTimeout(()=>{a.className='';},2200);
+}
+
+// ════════════════════════════════════════════
+// 게임 흐름
+// ════════════════════════════════════════════
+function addLog(msg){gameLog.unshift(msg);if(gameLog.length>30)gameLog.pop();}
+
+function getStatusCode(bd,side){
+  const moves=getAllLegal(bd,side);
+  if(moves.length===0)return side==='cho'?'lose':'win';
+  if(isInCheck(bd,side))return side==='cho'?'check_me':'check_ai';
+  return'ok';
+}
+
+function showResult(type){
+  const ov=document.getElementById('overlay');
+  document.getElementById('res-emoji').textContent=type==='win'?'🏆':'💀';
+  document.getElementById('res-title').textContent=type==='win'?'승리!':'패배';
+  document.getElementById('res-title').style.color=type==='win'?'#fbbf24':'#ef4444';
+  document.getElementById('res-pts').textContent=type==='win'?'+50점 획득':'-20점';
+  document.getElementById('res-pts').style.color=type==='win'?'#22c55e':'#ef4444';
+  document.getElementById('res-score-big').textContent=score;
+  const lv=getLevel(score);
+  document.getElementById('res-rank-show').textContent=lv.icon+' '+lv.label;
+  document.getElementById('res-rank-show').style.color=lv.color;
+  document.getElementById('res-wl').textContent=`${wins}승 ${losses}패`;
+  ov.classList.add('show');
+}
+
+function runAI(){
+  aiThinking=true;updateUI();
+  aiTimer=setTimeout(()=>{
+    const lv=getLevel(score);
+    const depth=lv.depth;
+    const{move}=findBestMove(board,depth,1500); // 최대 1.5초 내 응답 보장
+    aiThinking=false;
+    if(move){
+      const captured=board[move.to[0]][move.to[1]];
+      if(captured){
+        capByAI.push(captured);
+        const pts=PIECE_INFO[captured]?.value||0;
+        addLog(`AI가 ${PIECE_INFO[captured]?.label}을(를) 잡았습니다`);
+      }
+      board=applyMove(board,move.from,move.to);
+      lastMove=move;
+      const s=getStatusCode(board,'cho');
+      if(s==='lose'){
+        losses++;score=Math.max(0,score-20);
+        gameOver=true;updateUI();showResult('lose');return;
+      }
+      if(s==='check_me'){playerTurn='check_me';showJanggun(true);}
+      else{playerTurn='cho';}
+    }else{
+      wins++;score+=50;gameOver=true;updateUI();showResult('win');return;
+    }
+    updateUI();
+  },100);
+}
+
+function handlePieceClick(r,c){
+  if(gameOver||aiThinking)return;
+  const isMyTurn=playerTurn==='cho'||playerTurn==='check_me'||playerTurn==='check_ai';
+  if(!isMyTurn)return;
+
+  if(selected){
+    const[sr,sc]=selected;
+    // 이동 가능한 위치인지
+    if(legalMoves.some(([mr,mc])=>mr===r&&mc===c)){
+      doMove(sr,sc,r,c);return;
+    }
+  }
+  // 내 기물 선택
+  if(getSide(board[r][c])==='cho'){
+    selected=[r,c];legalMoves=getLegalMoves(board,r,c);updateUI();
+  }else if(selected){
+    selected=null;legalMoves=[];updateUI();
+  }
+}
+
+function handleCellClick(r,c){
+  if(gameOver||aiThinking)return;
+  const isMyTurn=playerTurn==='cho'||playerTurn==='check_me'||playerTurn==='check_ai';
+  if(!isMyTurn||!selected)return;
+  if(legalMoves.some(([mr,mc])=>mr===r&&mc===c)){
+    const[sr,sc]=selected;
+    doMove(sr,sc,r,c);
+  }else{
+    selected=null;legalMoves=[];updateUI();
+  }
+}
+
+function doMove(sr,sc,r,c){
+  const captured=board[r][c];
+  if(captured){
+    capByPlayer.push(captured);
+    const pts=PIECE_INFO[captured]?.value||0;
+    score+=pts;
+    addLog(`${PIECE_INFO[captured]?.label}을(를) 잡았습니다 (+${pts}점)`);
+  }
+  board=applyMove(board,[sr,sc],[r,c]);
+  lastMove={from:[sr,sc],to:[r,c]};
+  selected=null;legalMoves=[];moveCount++;
+  const s=getStatusCode(board,'han');
+  if(s==='win'){
+    wins++;score+=50;gameOver=true;updateUI();showResult('win');return;
+  }
+  if(s==='check_ai'){playerTurn='check_ai';showJanggun(false);addLog('⚔️ 멍군!');}
+  else{playerTurn='han';}
+  updateUI();
+  setTimeout(()=>runAI(),120);
+}
+
+// ════════════════════════════════════════════
+// 화면 전환
+// ════════════════════════════════════════════
+function startGame(){
+  board=buildBoard(setupChoice);
+  selected=null;legalMoves=[];playerTurn='cho';aiThinking=false;lastMove=null;
+  capByPlayer=[];capByAI=[];gameOver=false;moveCount=0;gameLog=[];
+  document.getElementById('setup-screen').classList.add('hide');
+  document.getElementById('game-screen').classList.add('show');
+  document.getElementById('overlay').classList.remove('show');
+  updateUI();
+}
+
+function resetGame(){
+  clearTimeout(aiTimer);
+  startGame();
+}
+
+function goSetup(){
+  clearTimeout(aiTimer);
+  document.getElementById('game-screen').classList.remove('show');
+  document.getElementById('setup-screen').classList.remove('hide');
+  document.getElementById('overlay').classList.remove('show');
+  renderSetup();
+}
+
+// 오버레이 클릭 → 새 게임
+document.getElementById('overlay').addEventListener('click',resetGame);
+
+// ── 초기화 ──
+score=0;wins=0;losses=0;
+renderSetup();
+</script>
+</body>
+</html>
