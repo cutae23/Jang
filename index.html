@@ -6,7 +6,7 @@
 <title>장기 - AI 대전</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#0a0a0f;color:#e8d5b0;font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;min-height:100vh;overflow-x:hidden;}
+body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;min-height:100vh;overflow-x:hidden;}
 
 /* ── 오버레이 ── */
 #overlay{position:fixed;inset:0;z-index:200;background:#000000dd;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
@@ -14,7 +14,7 @@ body{background:#0a0a0f;color:#e8d5b0;font-family:'Noto Sans KR','Apple SD Gothi
 .res-emoji{font-size:5rem;animation:bounce 0.6s ease;}
 @keyframes bounce{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
 .res-title{font-size:2.2rem;font-weight:900;letter-spacing:.15em;}
-.res-box{background:#1a1a2e;border:2px solid #gold;border-radius:16px;padding:16px 32px;text-align:center;min-width:200px;}
+.res-box{background:#1a1a2e;border:2px solid #d4af37;border-radius:16px;padding:16px 32px;text-align:center;min-width:200px;}
 .res-score-big{font-size:2.2rem;font-weight:900;color:#fbbf24;}
 .res-hint{color:#6b7280;font-size:.8rem;margin-top:4px;}
 
@@ -24,59 +24,59 @@ body{background:#0a0a0f;color:#e8d5b0;font-family:'Noto Sans KR','Apple SD Gothi
 #janggun-alert.ai{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-color:#3b82f6;box-shadow:0 0 40px #3b82f680;}
 
 /* ── 말 선택 화면 ── */
-#setup-screen{position:fixed;inset:0;z-index:100;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;}
+#setup-screen{position:fixed;inset:0;z-index:100;background:#f7f5f0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;}
 #setup-screen.hide{display:none;}
-.setup-title{font-size:1.6rem;font-weight:900;color:#fbbf24;letter-spacing:.1em;margin-bottom:4px;}
-.setup-sub{font-size:.75rem;color:#6b7280;margin-bottom:16px;}
+.setup-title{font-size:1.6rem;font-weight:900;color:#b45309;letter-spacing:.1em;margin-bottom:4px;}
+.setup-sub{font-size:.75rem;color:#78716c;margin-bottom:16px;}
 .setup-board{position:relative;margin:0 auto;}
-.setup-info{background:#1a1a2e;border:1px solid #2d2d4e;border-radius:10px;padding:10px 14px;width:100%;max-width:380px;margin-top:10px;font-size:.75rem;color:#9ca3af;text-align:center;}
+.setup-info{background:#ffffff;border:1px solid #e7e2d8;border-radius:10px;padding:10px 14px;width:100%;max-width:380px;margin-top:10px;font-size:.75rem;color:#6b6256;text-align:center;box-shadow:0 1px 3px #00000010;}
 .setup-btn{background:linear-gradient(135deg,#b45309,#d97706);border:none;border-radius:10px;color:#fff;padding:12px 32px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:10px;letter-spacing:.05em;width:100%;max-width:380px;}
 
 /* ── 메인 게임 ── */
 #game-screen{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:8px 6px 20px;}
 #game-screen.show{display:flex;}
 
-.top-bar{width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding:8px 12px;background:#12121e;border-radius:10px;border:1px solid #1f1f3a;}
+.top-bar{width:100%;max-width:var(--ui-max-width,420px);display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding:8px 12px;background:#ffffff;border-radius:10px;border:1px solid #e7e2d8;box-shadow:0 1px 4px #00000010;}
 .level-badge{display:flex;align-items:center;gap:6px;}
 .level-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .level-name{font-weight:700;font-size:.9rem;}
-.level-pts{font-size:.65rem;color:#6b7280;}
+.level-pts{font-size:.65rem;color:#78716c;}
 .game-title{text-align:right;}
-.game-title h1{font-size:1.4rem;font-weight:900;letter-spacing:.2em;color:#fbbf24;}
-.game-title p{font-size:.6rem;color:#4b5563;}
+.game-title h1{font-size:1.4rem;font-weight:900;letter-spacing:.2em;color:#b45309;}
+.game-title p{font-size:.6rem;color:#a8a29e;}
 
-.progress-wrap{width:100%;max-width:420px;margin-bottom:6px;}
-.progress-row{display:flex;justify-content:space-between;font-size:.6rem;color:#4b5563;margin-bottom:2px;}
-.progress-track{height:5px;background:#1f1f1f;border-radius:3px;overflow:hidden;}
+.progress-wrap{width:100%;max-width:var(--ui-max-width,420px);margin-bottom:6px;}
+.progress-row{display:flex;justify-content:space-between;font-size:.6rem;color:#a8a29e;margin-bottom:2px;}
+.progress-track{height:5px;background:#e7e2d8;border-radius:3px;overflow:hidden;}
 .progress-bar{height:100%;border-radius:3px;transition:width .6s;}
 
-.player-panel{width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;margin-bottom:3px;}
+.player-panel{width:100%;max-width:var(--ui-max-width,420px);display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;margin-bottom:3px;}
 .panel-left{display:flex;align-items:center;gap:8px;}
 .panel-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
 .panel-name{font-size:.82rem;font-weight:700;}
-.panel-side{font-size:.62rem;color:#6b7280;}
-.panel-score-label{font-size:.62rem;color:#6b7280;}
+.panel-side{font-size:.62rem;color:#78716c;}
+.panel-score-label{font-size:.62rem;color:#78716c;}
 .panel-score-val{font-size:.95rem;font-weight:700;}
 
-.cap-row{width:100%;max-width:420px;min-height:22px;display:flex;flex-wrap:wrap;gap:2px;margin-bottom:3px;padding:0 2px;}
+.cap-row{width:100%;max-width:var(--ui-max-width,420px);min-height:22px;display:flex;flex-wrap:wrap;gap:2px;margin-bottom:3px;padding:0 2px;}
 
-.status-bar{width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-radius:7px;border:1px solid #2d2d4e;background:#12121e;margin-bottom:5px;font-size:.8rem;}
-.status-bar.check{background:#3a0a0a;border-color:#ef4444;animation:pulse-red 1s infinite;}
-.status-bar.check-ai{background:#0a1a3a;border-color:#3b82f6;}
+.status-bar{width:100%;max-width:var(--ui-max-width,420px);display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-radius:7px;border:1px solid #e7e2d8;background:#ffffff;margin-bottom:5px;font-size:.8rem;box-shadow:0 1px 4px #00000010;}
+.status-bar.check{background:#fef2f2;border-color:#ef4444;animation:pulse-red 1s infinite;}
+.status-bar.check-ai{background:#eff6ff;border-color:#3b82f6;}
 @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 #ef444440}50%{box-shadow:0 0 0 6px #ef444400}}
 
 #board-svg{display:block;cursor:default;}
 
-.bottom-panel{width:100%;max-width:420px;display:flex;gap:6px;margin-top:6px;}
-.log-panel{flex:1;background:#0d0d1a;border:1px solid #1f1f3a;border-radius:8px;padding:6px 8px;max-height:72px;overflow-y:auto;}
-.log-entry{font-size:.65rem;margin-bottom:1px;padding:1px 0;}
-.log-empty{color:#2d2d4e;font-size:.65rem;text-align:center;padding-top:10px;}
+.bottom-panel{width:100%;max-width:var(--ui-max-width,420px);display:flex;gap:6px;margin-top:6px;}
+.log-panel{flex:1;background:#ffffff;border:1px solid #e7e2d8;border-radius:8px;padding:6px 8px;max-height:72px;overflow-y:auto;}
+.log-entry{font-size:.65rem;margin-bottom:1px;padding:1px 0;color:#44403c;}
+.log-empty{color:#c9c2b4;font-size:.65rem;text-align:center;padding-top:10px;}
 .side-panel{display:flex;flex-direction:column;gap:5px;}
-.btn-new{background:#1f1f2e;border:1px solid #2d2d4e;border-radius:7px;color:#e8d5b0;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap;}
+.btn-new{background:#f3f0e8;border:1px solid #e7e2d8;border-radius:7px;color:#44403c;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap;}
 .btn-setup{background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:7px;color:#fff;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap;}
-.score-chip{background:#0d0d1a;border:1px solid #1f1f3a;border-radius:7px;padding:4px 8px;text-align:center;}
-.score-chip-label{font-size:.58rem;color:#4b5563;}
-.score-chip-val{font-size:.95rem;font-weight:700;color:#fbbf24;}
+.score-chip{background:#ffffff;border:1px solid #e7e2d8;border-radius:7px;padding:4px 8px;text-align:center;}
+.score-chip-label{font-size:.58rem;color:#a8a29e;}
+.score-chip-val{font-size:.95rem;font-weight:700;color:#b45309;}
 </style>
 </head>
 <body>
@@ -103,7 +103,28 @@ body{background:#0a0a0f;color:#e8d5b0;font-family:'Noto Sans KR','Apple SD Gothi
   <div class="setup-title">장　기</div>
   <div class="setup-sub">말 배치를 선택하세요 (초/붉은색이 당신)</div>
   <svg id="setup-svg" style="display:block;margin:0 auto;cursor:pointer;"></svg>
-  <div class="setup-info" id="setup-info">마(馬)와 상(象)의 위치를 선택하세요.<br>현재 선택: <span id="setup-sel-label" style="color:#fbbf24;">마상상마 (기본)</span></div>
+  <div class="setup-info" id="setup-info">마(馬)와 상(象)의 위치를 선택하세요.<br>현재 선택: <span id="setup-sel-label" style="color:#b45309;font-weight:700;">마상상마 (기본)</span></div>
+
+  <div class="setup-info" id="gemini-box" style="text-align:left;">
+    <label style="display:flex;align-items:center;gap:7px;font-size:.8rem;color:#44403c;cursor:pointer;font-weight:600;">
+      <input type="checkbox" id="gemini-toggle" onchange="toggleGemini(this.checked)" style="width:16px;height:16px;accent-color:#7c3aed;">
+      <span>🔮 Gemini AI로 상대하기</span>
+    </label>
+    <div id="gemini-key-row" style="display:none;margin-top:8px;">
+      <div style="font-size:.66rem;color:#78716c;margin-bottom:7px;line-height:1.55;">
+        서버(Vercel)에 공용 키가 설정돼 있으면 자동으로 그걸 써요 — 이 키는 브라우저로 절대 전송되지 않아요.<br>
+        공용 키가 없거나 응답에 실패할 때만 아래 개인 키로 대체돼요.
+      </div>
+      <input type="password" id="gemini-key-input" placeholder="백업용 개인 API 키 (선택)"
+        oninput="geminiApiKey=this.value"
+        style="width:100%;padding:8px 10px;border:1px solid #d6cfc0;border-radius:7px;font-size:.78rem;background:#fff;color:#1c1917;">
+      <div style="font-size:.65rem;color:#a8a29e;margin-top:5px;line-height:1.5;">
+        개인 키는 저장되지 않고 이 브라우저 메모리에만 잠깐 보관되며, 쓰일 때는 브라우저에서 Gemini로 직접 전송돼요.<br>
+        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:#2563eb;font-weight:600;">Google AI Studio에서 무료로 키 발급받기 →</a>
+      </div>
+    </div>
+  </div>
+
   <button class="setup-btn" onclick="startGame()">⚔️ 대전 시작</button>
 </div>
 
@@ -133,17 +154,17 @@ body{background:#0a0a0f;color:#e8d5b0;font-family:'Noto Sans KR','Apple SD Gothi
   </div>
 
   <!-- AI 패널 -->
-  <div class="player-panel" style="background:#0d1a2e;border:1px solid #1e3a5f;">
+  <div class="player-panel" style="background:#eff6ff;border:1px solid #bfdbfe;">
     <div class="panel-left">
-      <div class="panel-avatar" style="background:linear-gradient(135deg,#1e3a8a,#1e40af);border:2px solid #3b82f6;">🤖</div>
+      <div class="panel-avatar" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border:2px solid #3b82f6;">🤖</div>
       <div>
-        <div class="panel-name" style="color:#93c5fd;">AI 장군</div>
+        <div class="panel-name" style="color:#1d4ed8;">AI 장군</div>
         <div class="panel-side">한(漢) · 파란색 · <span id="ai-level-label"></span></div>
       </div>
     </div>
     <div style="text-align:right;">
       <div class="panel-score-label">잡은 기물</div>
-      <div class="panel-score-val" style="color:#ef4444;" id="ai-cap-score">0점</div>
+      <div class="panel-score-val" style="color:#dc2626;" id="ai-cap-score">0점</div>
     </div>
   </div>
 
@@ -163,17 +184,17 @@ body{background:#0a0a0f;color:#e8d5b0;font-family:'Noto Sans KR','Apple SD Gothi
   <div class="cap-row" id="cap-by-player"></div>
 
   <!-- 플레이어 패널 -->
-  <div class="player-panel" style="background:#1a0d0d;border:1px solid #5f1e1e;">
+  <div class="player-panel" style="background:#fef2f2;border:1px solid #fecaca;">
     <div class="panel-left">
-      <div class="panel-avatar" id="player-avatar" style="border:2px solid #9ca3af;"></div>
+      <div class="panel-avatar" id="player-avatar" style="border:2px solid #d6d3d1;"></div>
       <div>
-        <div class="panel-name" style="color:#fca5a5;">나 (플레이어)</div>
+        <div class="panel-name" style="color:#dc2626;">나 (플레이어)</div>
         <div class="panel-side">초(楚) · 붉은색</div>
       </div>
     </div>
     <div style="text-align:right;">
       <div class="panel-score-label">잡은 기물</div>
-      <div class="panel-score-val" style="color:#22c55e;" id="player-cap-score">0점</div>
+      <div class="panel-score-val" style="color:#16a34a;" id="player-cap-score">0점</div>
     </div>
   </div>
 
@@ -195,16 +216,16 @@ body{background:#0a0a0f;color:#e8d5b0;font-family:'Noto Sans KR','Apple SD Gothi
 // ════════════════════════════════════════════
 // 상수 & 데이터
 // ════════════════════════════════════════════
-const CELL = 38, PAD = 26;
-const BW = CELL*8+PAD*2, BH = CELL*9+PAD*2;
+let CELL = 38, PAD = 26;
+let BW = CELL*8+PAD*2, BH = CELL*9+PAD*2;
 const cx = c => PAD+c*CELL, cy = r => PAD+r*CELL;
 const NS = 'http://www.w3.org/2000/svg';
 
 // 기물 크기 등급
 const PIECE_SIZE = { 궁:22, 차:18, 포:17, 마:16, 상:15, 사:14, 졸:13, 병:13 };
 const PIECE_FONT = { 궁:13, 차:11, 포:11, 마:11, 상:10, 사:10, 졸:10, 병:10 };
-const PIECE_COLOR_CHO = { 궁:'#ff4444', 차:'#ff6600', 포:'#ff8800', 마:'#ffaa00', 상:'#dd8800', 사:'#cc6600', 졸:'#aa5500', 병:'#aa5500' };
-const PIECE_COLOR_HAN = { 궁:'#7ab8ff', 차:'#a8c8ff', 포:'#bcd4ff', 마:'#cfe0ff', 상:'#bcd4ff', 사:'#dce8ff', 졸:'#eef4ff', 병:'#eef4ff' };
+const PIECE_COLOR_CHO = { 궁:'#b91c1c', 차:'#c2410c', 포:'#c2410c', 마:'#b45309', 상:'#a16207', 사:'#9a3412', 졸:'#9a3412', 병:'#9a3412' };
+const PIECE_COLOR_HAN = { 궁:'#1e3a8a', 차:'#1d4ed8', 포:'#1d4ed8', 마:'#2563eb', 상:'#2563eb', 사:'#3b82f6', 졸:'#3b82f6', 병:'#3b82f6' };
 
 const PIECE_INFO = {
   '궁초':{han:'將',name:'궁',cho:true,value:0,label:'장(將)'},
@@ -251,6 +272,8 @@ let board, selected, legalMoves, playerTurn, aiThinking, lastMove;
 let capByPlayer, capByAI, gameOver, score, wins, losses, moveCount, gameLog;
 let setupChoice = 0; // 현재 선택된 배치
 let aiTimer = null;
+let useGemini = false;       // Gemini API를 AI로 사용할지 여부
+let geminiApiKey = '';       // 브라우저 메모리에만 보관 (저장되지 않음)
 
 // ════════════════════════════════════════════
 // 말 배치 화면
@@ -261,7 +284,7 @@ function renderSetup(){
   const W = S*8+P*2, H = S*2+P*2+30;
   svg.setAttribute('width',W); svg.setAttribute('height',H);
   svg.innerHTML='';
-  const bg = el('rect',{x:0,y:0,width:W,height:H,rx:8,fill:'#1a1208'});
+  const bg = el('rect',{x:0,y:0,width:W,height:H,rx:8,fill:'#e3c690'});
   svg.appendChild(bg);
   // 배치 버튼들
   SETUP_OPTIONS.forEach((opt,idx)=>{
@@ -271,7 +294,7 @@ function renderSetup(){
     g.style.cursor='pointer';
     g.addEventListener('click',()=>{setupChoice=idx;renderSetup();});
     g.appendChild(el('rect',{x:bx-4,y:by-4,width:S*2+8,height:S*2+8,rx:6,
-      fill:sel?'#2a1f0a':'#111',stroke:sel?'#fbbf24':'#333','stroke-width':sel?2:1}));
+      fill:sel?'#fef3c7':'#f7ecd4',stroke:sel?'#d97706':'#c9a875','stroke-width':sel?2:1}));
     // 한자로 배치 표시
     const labels = [opt.left[0],'','','','','','',opt.right[0]];
     ['馬','象','象','馬'].forEach((h,i)=>{}); // dummy
@@ -283,12 +306,12 @@ function renderSetup(){
       {h:opt.right[1]==='마'?'馬':'象',x:bx+S,y:by+S,cho:true},
     ];
     pieces.forEach(({h,x,y})=>{
-      g.appendChild(el('circle',{cx:x+S/2,cy:y+S/2,r:12,fill:'#450a0a',stroke:'#ef4444','stroke-width':1.5}));
+      g.appendChild(el('circle',{cx:x+S/2,cy:y+S/2,r:12,fill:'#fffdf6',stroke:'#dc2626','stroke-width':1.5}));
       const t=document.createElementNS(NS,'text');
       t.setAttribute('x',x+S/2);t.setAttribute('y',y+S/2+1);
       t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');
       t.setAttribute('font-size',10);t.setAttribute('font-weight','700');
-      t.setAttribute('font-family','serif');t.setAttribute('fill','#fca5a5');
+      t.setAttribute('font-family','serif');t.setAttribute('fill','#dc2626');
       t.textContent=h;
       g.appendChild(t);
     });
@@ -296,7 +319,7 @@ function renderSetup(){
     const lt=document.createElementNS(NS,'text');
     lt.setAttribute('x',bx+S);lt.setAttribute('y',by+S*2+16);
     lt.setAttribute('text-anchor','middle');lt.setAttribute('font-size',9);
-    lt.setAttribute('fill',sel?'#fbbf24':'#6b7280');lt.setAttribute('font-family','sans-serif');
+    lt.setAttribute('fill',sel?'#b45309':'#8a7a5c');lt.setAttribute('font-family','sans-serif');
     lt.textContent=opt.label;
     g.appendChild(lt);
     svg.appendChild(g);
@@ -499,6 +522,59 @@ function txt(content,attrs){
 }
 
 // ════════════════════════════════════════════
+// 보드 크기 동적 계산 (화면을 가득 채우도록)
+// ════════════════════════════════════════════
+const PAD_RATIO = 26/38; // 기본 PAD/CELL 비율 유지
+function calcBoardSize(){
+  const margin = 8; // 좌우 여백
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  let maxW = Math.min(vw - margin*2, 900);
+
+  let usedH = 0;
+  const screenEl = document.getElementById('game-screen');
+  const isShown = screenEl && screenEl.classList.contains('show');
+  if(isShown){
+    Array.from(screenEl.children).forEach(child=>{
+      if(child.id==='board-svg') return;
+      const r = child.getBoundingClientRect();
+      usedH += r.height;
+      const cs = getComputedStyle(child);
+      usedH += parseFloat(cs.marginTop||0)+parseFloat(cs.marginBottom||0);
+    });
+    const cs = getComputedStyle(screenEl);
+    usedH += parseFloat(cs.paddingTop||0)+parseFloat(cs.paddingBottom||0);
+  }else{
+    usedH = vh*0.42; // 게임화면이 아직 안 보일 때의 추정치
+  }
+  let maxH = Math.max(220, vh - usedH - 10);
+
+  const cellByW = maxW/(8+2*PAD_RATIO);
+  const cellByH = maxH/(9+2*PAD_RATIO);
+  let cell = Math.floor(Math.min(cellByW, cellByH));
+  cell = Math.max(26, Math.min(cell, 80));
+
+  CELL = cell;
+  PAD = Math.round(cell*PAD_RATIO);
+  BW = CELL*8+PAD*2;
+  BH = CELL*9+PAD*2;
+  document.documentElement.style.setProperty('--ui-max-width', BW+'px');
+}
+function layoutBoard(){
+  calcBoardSize();
+  renderBoard();
+}
+let _resizeTimer=null;
+function scheduleRelayout(){
+  clearTimeout(_resizeTimer);
+  _resizeTimer=setTimeout(()=>{
+    if(document.getElementById('game-screen').classList.contains('show')) layoutBoard();
+  },150);
+}
+window.addEventListener('resize',scheduleRelayout);
+window.addEventListener('orientationchange',()=>setTimeout(scheduleRelayout,250));
+
+// ════════════════════════════════════════════
 // 보드 렌더링
 // ════════════════════════════════════════════
 function renderBoard(){
@@ -510,8 +586,8 @@ function renderBoard(){
   const defs=document.createElementNS(NS,'defs');
   const grad=document.createElementNS(NS,'radialGradient');
   grad.setAttribute('id','bggrad');grad.setAttribute('cx','50%');grad.setAttribute('cy','50%');grad.setAttribute('r','60%');
-  const s1=document.createElementNS(NS,'stop');s1.setAttribute('offset','0%');s1.setAttribute('stop-color','#2e1f08');
-  const s2=document.createElementNS(NS,'stop');s2.setAttribute('offset','100%');s2.setAttribute('stop-color','#1a1005');
+  const s1=document.createElementNS(NS,'stop');s1.setAttribute('offset','0%');s1.setAttribute('stop-color','#f5e3bd');
+  const s2=document.createElementNS(NS,'stop');s2.setAttribute('offset','100%');s2.setAttribute('stop-color','#e3c690');
   grad.appendChild(s1);grad.appendChild(s2);defs.appendChild(grad);
 
   // 기물 그림자 필터
@@ -535,34 +611,34 @@ function renderBoard(){
   svg.appendChild(defs);
 
   // 판 배경
-  svg.appendChild(el('rect',{x:0,y:0,width:BW,height:BH,rx:10,fill:'#0a0a0f'}));
-  svg.appendChild(el('rect',{x:PAD-10,y:PAD-10,width:BW-PAD*2+20,height:BH-PAD*2+20,rx:6,fill:'url(#bggrad)',stroke:'#5a3a10','stroke-width':2}));
+  svg.appendChild(el('rect',{x:0,y:0,width:BW,height:BH,rx:10,fill:'#d9b87c'}));
+  svg.appendChild(el('rect',{x:PAD-10,y:PAD-10,width:BW-PAD*2+20,height:BH-PAD*2+20,rx:6,fill:'url(#bggrad)',stroke:'#b8935a','stroke-width':2}));
 
   // 격자선
-  for(let r=0;r<10;r++)svg.appendChild(el('line',{x1:cx(0),y1:cy(r),x2:cx(8),y2:cy(r),stroke:'#6a4a20','stroke-width':0.8,opacity:0.7}));
-  for(let c=0;c<9;c++)svg.appendChild(el('line',{x1:cx(c),y1:cy(0),x2:cx(c),y2:cy(9),stroke:'#6a4a20','stroke-width':0.8,opacity:0.7}));
+  for(let r=0;r<10;r++)svg.appendChild(el('line',{x1:cx(0),y1:cy(r),x2:cx(8),y2:cy(r),stroke:'#8a6633','stroke-width':0.9,opacity:0.75}));
+  for(let c=0;c<9;c++)svg.appendChild(el('line',{x1:cx(c),y1:cy(0),x2:cx(c),y2:cy(9),stroke:'#8a6633','stroke-width':0.9,opacity:0.75}));
 
   // 강
-  svg.appendChild(el('rect',{x:cx(0)+1,y:cy(4)+5,width:cx(8)-cx(0)-2,height:cy(5)-cy(4)-10,fill:'#0d0a05',stroke:'#4a3010','stroke-width':0.5,opacity:0.6}));
-  svg.appendChild(txt('楚  河',{x:(cx(0)+cx(3.5))/2,y:cy(4)+(cy(5)-cy(4))/2+4,'text-anchor':'middle',fill:'#5a3510','font-size':9,'font-family':'serif',opacity:0.7}));
-  svg.appendChild(txt('漢  界',{x:(cx(4.5)+cx(8))/2,y:cy(4)+(cy(5)-cy(4))/2+4,'text-anchor':'middle',fill:'#5a3510','font-size':9,'font-family':'serif',opacity:0.7}));
+  svg.appendChild(el('rect',{x:cx(0)+1,y:cy(4)+5,width:cx(8)-cx(0)-2,height:cy(5)-cy(4)-10,fill:'#eaf4fb',stroke:'#b8935a','stroke-width':0.5,opacity:0.8}));
+  svg.appendChild(txt('楚  河',{x:(cx(0)+cx(3.5))/2,y:cy(4)+(cy(5)-cy(4))/2+4,'text-anchor':'middle',fill:'#8a6633','font-size':9,'font-family':'serif',opacity:0.7}));
+  svg.appendChild(txt('漢  界',{x:(cx(4.5)+cx(8))/2,y:cy(4)+(cy(5)-cy(4))/2+4,'text-anchor':'middle',fill:'#8a6633','font-size':9,'font-family':'serif',opacity:0.7}));
 
   // 궁성 대각선
   [[3,0,5,2],[5,0,3,2],[3,7,5,9],[5,7,3,9]].forEach(([c1,r1,c2,r2])=>{
-    svg.appendChild(el('line',{x1:cx(c1),y1:cy(r1),x2:cx(c2),y2:cy(r2),stroke:'#8a6030','stroke-width':1,opacity:0.8}));
+    svg.appendChild(el('line',{x1:cx(c1),y1:cy(r1),x2:cx(c2),y2:cy(r2),stroke:'#9c7440','stroke-width':1,opacity:0.85}));
   });
 
   // 포 위치 마크
   [[2,1],[2,7],[7,1],[7,7]].forEach(([r,c])=>{
     [[-4,-4,4,4],[-4,4,4,-4]].forEach(([x1,y1,x2,y2])=>
-      svg.appendChild(el('line',{x1:cx(c)+x1,y1:cy(r)+y1,x2:cx(c)+x2,y2:cy(r)+y2,stroke:'#6a4a20','stroke-width':0.8,opacity:0.6}))
+      svg.appendChild(el('line',{x1:cx(c)+x1,y1:cy(r)+y1,x2:cx(c)+x2,y2:cy(r)+y2,stroke:'#8a6633','stroke-width':0.9,opacity:0.7}))
     );
   });
 
   // 마지막 수 하이라이트
   if(lastMove){
     [lastMove.from,lastMove.to].forEach(([r,c])=>{
-      svg.appendChild(el('rect',{x:cx(c)-CELL/2,y:cy(r)-CELL/2,width:CELL,height:CELL,fill:'#fbbf2412',rx:3}));
+      svg.appendChild(el('rect',{x:cx(c)-CELL/2,y:cy(r)-CELL/2,width:CELL,height:CELL,fill:'#2563eb22',rx:3}));
     });
   }
 
@@ -610,12 +686,12 @@ function renderBoard(){
     g.appendChild(el('circle',{cx:cx(c)+1.5,cy:cy(r)+2.5,r:R,fill:'#00000080'}));
 
     // 기물 외곽 (테두리 링)
-    g.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:R,fill:isCho?'#1a0000':'#000d1a',stroke:colBase,'stroke-width':sel?2.5:2}));
+    g.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:R,fill:'#fffdf6',stroke:colBase,'stroke-width':sel?2.5:2}));
 
     // 기물 내부 원 (크기에 따라 다른 느낌)
     const innerR = R*0.75;
     // 내부 그라디언트 효과 (방사형 밝기)
-    g.appendChild(el('circle',{cx:cx(c)-R*0.2,cy:cy(r)-R*0.2,r:R*0.4,fill:'#ffffff18'}));
+    g.appendChild(el('circle',{cx:cx(c)-R*0.2,cy:cy(r)-R*0.2,r:R*0.4,fill:'#ffffffaa'}));
 
     // 장(將)은 특별히 더 화려하게
     if(name==='궁'){
@@ -686,7 +762,7 @@ function updateUI(){
   icon.textContent=lv.icon;icon.style.background=`linear-gradient(135deg,${lv.color}44,${lv.color}22)`;icon.style.border=`2px solid ${lv.color}`;
   document.getElementById('lv-name').textContent=lv.label;document.getElementById('lv-name').style.color=lv.color;
   document.getElementById('lv-pts').textContent=`${score}점 · ${wins}승 ${losses}패`;
-  document.getElementById('ai-level-label').textContent=lv.label+' AI';
+  document.getElementById('ai-level-label').textContent=useGemini?'🔮 Gemini':lv.label+' AI';
 
   // 프로그레스
   document.getElementById('prog-cur-label').textContent=`${lv.label} ${lv.min}점`;
@@ -707,12 +783,12 @@ function updateUI(){
 
   // 잡은 기물
   document.getElementById('cap-by-ai').innerHTML=capByAI.map(p=>{
-    const n=pn(p);const col=PIECE_COLOR_CHO[n]||'#fca5a5';
-    return `<div style="background:#1a0000;border:1px solid ${col}44;border-radius:4px;padding:1px 5px;font-size:11px;font-family:serif;color:${col};font-weight:700;">${PIECE_INFO[p]?.han}</div>`;
+    const n=pn(p);const col=PIECE_COLOR_CHO[n]||'#dc2626';
+    return `<div style="background:#fef2f2;border:1px solid ${col}55;border-radius:4px;padding:1px 5px;font-size:11px;font-family:serif;color:${col};font-weight:700;">${PIECE_INFO[p]?.han}</div>`;
   }).join('');
   document.getElementById('cap-by-player').innerHTML=capByPlayer.map(p=>{
-    const n=pn(p);const col=PIECE_COLOR_HAN[n]||'#93c5fd';
-    return `<div style="background:#000d1a;border:1px solid ${col}44;border-radius:4px;padding:1px 5px;font-size:11px;font-family:serif;color:${col};font-weight:700;">${PIECE_INFO[p]?.han}</div>`;
+    const n=pn(p);const col=PIECE_COLOR_HAN[n]||'#1d4ed8';
+    return `<div style="background:#eff6ff;border:1px solid ${col}55;border-radius:4px;padding:1px 5px;font-size:11px;font-family:serif;color:${col};font-weight:700;">${PIECE_INFO[p]?.han}</div>`;
   }).join('');
 
   // 상태바
@@ -720,29 +796,28 @@ function updateUI(){
   const sl=document.getElementById('status-left');
   sb.className='status-bar';
   if(aiThinking){
-    sl.innerHTML='<span style="color:#93c5fd">🤔 AI 계산 중...</span>';
+    sl.innerHTML=useGemini
+      ?'<span style="color:#7c3aed">🔮 Gemini 생각 중...</span>'
+      :'<span style="color:#2563eb">🤔 AI 계산 중...</span>';
   }else if(playerTurn==='check_me'){
     sb.classList.add('check');
-    sl.innerHTML='⚠️ <span style="color:#fca5a5;font-weight:700">장군!</span>';
+    sl.innerHTML='⚠️ <span style="color:#dc2626;font-weight:700">장군!</span>';
   }else if(playerTurn==='check_ai'){
     sb.classList.add('check-ai');
-    sl.innerHTML='⚔️ <span style="color:#86efac;font-weight:700">장군! 몰아붙이세요</span>';
+    sl.innerHTML='⚔️ <span style="color:#16a34a;font-weight:700">장군! 몰아붙이세요</span>';
   }else{
     sl.innerHTML=playerTurn==='cho'||playerTurn==='check_me'
-      ?'🔴 <span style="color:#fca5a5">당신의 차례</span>'
-      :'🔵 <span style="color:#93c5fd">AI 차례...</span>';
+      ?'🔴 <span style="color:#dc2626">당신의 차례</span>'
+      :'🔵 <span style="color:#2563eb">AI 차례...</span>';
   }
 
   // 로그
   const lb=document.getElementById('log-panel');
   if(gameLog.length===0){lb.innerHTML='<div class="log-empty">기보가 여기에 표시됩니다</div>';}
-  else{lb.innerHTML=gameLog.map((l,i)=>`<div class="log-entry" style="color:${i===0?'#e8d5b0':'#4b5563'}">${l}</div>`).join('');}
+  else{lb.innerHTML=gameLog.map((l,i)=>`<div class="log-entry" style="color:${i===0?'#1c1917':'#a8a29e'}">${l}</div>`).join('');}
 
-  renderBoard();
+  layoutBoard();
 }
-
-// ════════════════════════════════════════════
-// 장군 알림
 // ════════════════════════════════════════════
 function showJanggun(playerIsInCheck){
   const a=document.getElementById('janggun-alert');
@@ -785,12 +860,113 @@ function showResult(type){
   ov.classList.add('show');
 }
 
+// ════════════════════════════════════════════
+// Gemini API 연동
+// 1순위: /api/gemini (Vercel 환경변수의 공용 키, 브라우저에 노출 안 됨)
+// 2순위: 사용자가 입력한 개인 키 (브라우저에서 직접 호출, 폴백용)
+// 3순위: 로컬 미니맥스 AI
+// ════════════════════════════════════════════
+function toggleGemini(checked){
+  useGemini = checked;
+  const row = document.getElementById('gemini-key-row');
+  if(row) row.style.display = checked ? 'block' : 'none';
+  updateUI();
+}
+
+function boardToText(bd){
+  return bd.map(row=>row.map(p=>p||'--').join(' ')).join('\n');
+}
+
+function movesToText(bd, moves){
+  return moves.map((m,i)=>{
+    const piece=bd[m.from[0]][m.from[1]];
+    const label=PIECE_INFO[piece]?.label||piece;
+    const captured=bd[m.to[0]][m.to[1]];
+    const capTxt=captured?`, 포획:${PIECE_INFO[captured]?.label||captured}`:'';
+    return `${i}: ${label} (${m.from[0]},${m.from[1]}) -> (${m.to[0]},${m.to[1]})${capTxt}`;
+  }).join('\n');
+}
+
+function buildGeminiPrompt(bd, moves){
+  return `당신은 한국 장기(Janggi)의 '한(漢)' 진영을 두는 AI 기사입니다.
+아래 보드 상태와 지금 둘 수 있는 합법적인 수의 목록 중에서 가장 좋은 수를 하나 고르세요.
+
+보드 (10행 x 9열, 행/열은 0부터 시작, 각 칸은 '기물+진영' 표기이며 '초'는 당신의 상대, '한'은 당신 자신입니다. 빈 칸은 --):
+${boardToText(bd)}
+
+지금 당신(한)이 둘 수 있는 수 목록:
+${movesToText(bd, moves)}
+
+이 중 가장 좋은 수의 번호를 아래 JSON 형식으로만 응답하세요. 다른 설명이나 텍스트는 절대 포함하지 마세요.
+{"index": 0}`;
+}
+
+// 공용 서버 키(/api/gemini) → 개인 키(직접 호출) 순으로 시도
+async function callGeminiWithPrompt(prompt){
+  // 1) 공용 서버 키 (Vercel 환경변수, 서버에서만 사용됨)
+  try{
+    const res = await fetch('/api/gemini', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ prompt })
+    });
+    if(res.ok){
+      const data = await res.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if(text) return { text, source:'shared' };
+    }
+  }catch(e){ /* /api 라우트가 없거나(정적 호스팅) 네트워크 오류 → 개인 키로 폴백 */ }
+
+  // 2) 개인 키 폴백 (입력된 경우에만, 브라우저에서 직접 Gemini 호출)
+  if(geminiApiKey){
+    try{
+      const res2 = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-goog-api-key':geminiApiKey},
+        body: JSON.stringify({
+          contents:[{parts:[{text:prompt}]}],
+          generationConfig:{responseMimeType:'application/json', temperature:0.5}
+        })
+      });
+      if(res2.ok){
+        const data2 = await res2.json();
+        const text2 = data2?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if(text2) return { text:text2, source:'personal' };
+      }
+    }catch(e){ /* 개인 키도 실패 → 로컬 AI로 폴백 */ }
+  }
+  return null;
+}
+
+async function getGeminiMove(bd, moves){
+  if(!moves.length) return null;
+  const prompt = buildGeminiPrompt(bd, moves);
+  const result = await callGeminiWithPrompt(prompt);
+  if(!result){ addLog('⚠️ Gemini 응답 실패 → 기본 AI로 대체'); return null; }
+  const match = result.text.match(/-?\d+/);
+  if(!match){ addLog('⚠️ Gemini 응답 형식 오류 → 기본 AI로 대체'); return null; }
+  const idx = parseInt(match[0],10);
+  if(idx<0 || idx>=moves.length){ addLog('⚠️ Gemini가 잘못된 수를 선택 → 기본 AI로 대체'); return null; }
+  return moves[idx];
+}
+
 function runAI(){
   aiThinking=true;updateUI();
-  aiTimer=setTimeout(()=>{
-    const lv=getLevel(score);
-    const depth=lv.depth;
-    const{move}=findBestMove(board,depth,1500); // 최대 1.5초 내 응답 보장
+  aiTimer=setTimeout(async ()=>{
+    const legal=getAllLegal(board,'han');
+    if(legal.length===0){
+      aiThinking=false;
+      wins++;score+=50;gameOver=true;updateUI();showResult('win');return;
+    }
+    let move=null;
+    if(useGemini){
+      move = await getGeminiMove(board, legal);
+    }
+    if(!move){
+      const lv=getLevel(score);
+      const depth=lv.depth;
+      move=findBestMove(board,depth,1500).move; // 최대 1.5초 내 응답 보장
+    }
     aiThinking=false;
     if(move){
       const captured=board[move.to[0]][move.to[1]];
