@@ -1095,27 +1095,28 @@ function toggleFullscreen(){
 document.addEventListener('fullscreenchange',()=>{
   const btn = document.getElementById('btn-fs');
   const wrap = document.getElementById('board-wrap');
-  const svg = document.getElementById('board-svg');
+  const closeBtn = document.getElementById('fs-close-btn');
   if(document.fullscreenElement){
     if(btn) btn.textContent='⛶';
-    const closeBtn = document.getElementById('fs-close-btn');
     if(closeBtn) closeBtn.style.display='block';
-    // 전체화면: 판이 화면을 꽉 채우도록
     wrap.style.cssText='position:fixed;inset:0;z-index:9999;background:#d9b87c;display:flex;align-items:center;justify-content:center;line-height:0;';
-    // SVG 크기를 화면에 맞게 재계산
-    const vw=window.screen.width, vh=window.screen.height;
-    const cellByW = vw/(8+2*PAD_RATIO);
-    const cellByH = vh/(9+2*PAD_RATIO);
-    CELL = Math.floor(Math.min(cellByW, cellByH));
-    PAD = Math.round(CELL*PAD_RATIO);
-    BW = CELL*8+PAD*2; BH = CELL*9+PAD*2;
-    renderBoard();
+    // 전체화면 실제 크기 사용 (약간 여백)
+    requestAnimationFrame(()=>{
+      const vw = wrap.clientWidth || window.innerWidth;
+      const vh = wrap.clientHeight || window.innerHeight;
+      const cellByW = (vw - 16) / (8 + 2*PAD_RATIO);
+      const cellByH = (vh - 16) / (9 + 2*PAD_RATIO);
+      CELL = Math.floor(Math.min(cellByW, cellByH));
+      PAD = Math.round(CELL * PAD_RATIO);
+      BW = CELL*8 + PAD*2;
+      BH = CELL*9 + PAD*2;
+      renderBoard();
+    });
   } else {
     if(btn) btn.textContent='⛶';
-    const closeBtn = document.getElementById('fs-close-btn');
     if(closeBtn) closeBtn.style.display='none';
     wrap.style.cssText='position:relative;line-height:0;';
-    layoutBoard(); // 원래 크기로 복원
+    layoutBoard();
   }
 });
 
