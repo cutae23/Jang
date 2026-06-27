@@ -535,6 +535,7 @@ function txt(content,attrs){
 // ════════════════════════════════════════════
 const PAD_RATIO = 26/38; // 기본 PAD/CELL 비율 유지
 function calcBoardSize(){
+  if(_isFullscreen) return; // 전체화면 중엔 크기 재계산 금지
   const margin = 8; // 좌우 여백
   const vw = window.innerWidth;
   const vh = window.innerHeight;
@@ -1084,45 +1085,37 @@ function goSetup(){
 // 오버레이 클릭 → 새 게임
 document.getElementById('overlay').addEventListener('click',resetGame);
 
-// ── 전체화면 (장기판만) ──
+// ── 전체화면 (CSS 방식, requestFullscreen 사용 안 함) ──
+let _fsCELL = 0, _fsPAD = 0, _fsBW = 0, _fsBH = 0;
+
 function toggleFullscreen(){
-  const btn = document.getElementById('btn-fs');
-  const wrap = document.getElementById('board-wrap');
-  if(!document.fullscreenElement){
-    wrap.requestFullscreen().catch(()=>{});
-  } else {
-    document.exitFullscreen().catch(()=>{});
-  }
-}
-document.addEventListener('fullscreenchange',()=>{
-  const btn = document.getElementById('btn-fs');
   const wrap = document.getElementById('board-wrap');
   const closeBtn = document.getElementById('fs-close-btn');
-  if(document.fullscreenElement){
+  const btn = document.getElementById('btn-fs');
+  if(!_isFullscreen){
     _isFullscreen = true;
-    if(btn) btn.textContent='⛶';
-    if(closeBtn) closeBtn.style.display='block';
-    wrap.style.cssText='position:fixed;inset:0;z-index:9999;background:#d9b87c;display:flex;align-items:center;justify-content:center;line-height:0;';
-    // 전체화면 실제 크기 사용 (약간 여백)
-    requestAnimationFrame(()=>{
-      const vw = wrap.clientWidth || window.innerWidth;
-      const vh = wrap.clientHeight || window.innerHeight;
-      const cellByW = (vw - 16) / (8 + 2*PAD_RATIO);
-      const cellByH = (vh - 16) / (9 + 2*PAD_RATIO);
-      CELL = Math.floor(Math.min(cellByW, cellByH));
-      PAD = Math.round(CELL * PAD_RATIO);
-      BW = CELL*8 + PAD*2;
-      BH = CELL*9 + PAD*2;
-      renderBoard();
-    });
+    // 전체화면 크기 계산 후 고정
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const cellByW = (vw - 8) / (8 + 2*PAD_RATIO);
+    const cellByH = (vh - 8) / (9 + 2*PAD_RATIO);
+    _fsCELL = Math.floor(Math.min(cellByW, cellByH));
+    _fsPAD  = Math.round(_fsCELL * PAD_RATIO);
+    _fsBW   = _fsCELL*8 + _fsPAD*2;
+    _fsBH   = _fsCELL*9 + _fsPAD*2;
+    CELL = _fsCELL; PAD = _fsPAD; BW = _fsBW; BH = _fsBH;
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#d9b87c;display:flex;align-items:center;justify-content:center;line-height:0;';
+    if(closeBtn) closeBtn.style.display = 'block';
+    if(btn) btn.textContent = '⛶';
+    renderBoard();
   } else {
     _isFullscreen = false;
-    if(btn) btn.textContent='⛶';
-    if(closeBtn) closeBtn.style.display='none';
-    wrap.style.cssText='position:relative;line-height:0;';
+    _fsCELL = 0;
+    wrap.style.cssText = 'position:relative;line-height:0;';
+    if(closeBtn) closeBtn.style.display = 'none';
+    if(btn) btn.textContent = '⛶';
     layoutBoard();
   }
-});
+}
 
 // ── 초기화 ──
 score=0;wins=0;losses=0;
