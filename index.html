@@ -574,7 +574,9 @@ function layoutBoard(){
   renderBoard();
 }
 let _resizeTimer=null;
+let _isFullscreen=false;
 function scheduleRelayout(){
+  if(_isFullscreen) return; // 전체화면 중엔 resize 무시
   clearTimeout(_resizeTimer);
   _resizeTimer=setTimeout(()=>{
     if(document.getElementById('game-screen').classList.contains('show')) layoutBoard();
@@ -1097,6 +1099,7 @@ document.addEventListener('fullscreenchange',()=>{
   const wrap = document.getElementById('board-wrap');
   const closeBtn = document.getElementById('fs-close-btn');
   if(document.fullscreenElement){
+    _isFullscreen = true;
     if(btn) btn.textContent='⛶';
     if(closeBtn) closeBtn.style.display='block';
     wrap.style.cssText='position:fixed;inset:0;z-index:9999;background:#d9b87c;display:flex;align-items:center;justify-content:center;line-height:0;';
@@ -1113,6 +1116,7 @@ document.addEventListener('fullscreenchange',()=>{
       renderBoard();
     });
   } else {
+    _isFullscreen = false;
     if(btn) btn.textContent='⛶';
     if(closeBtn) closeBtn.style.display='none';
     wrap.style.cssText='position:relative;line-height:0;';
