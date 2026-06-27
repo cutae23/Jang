@@ -74,6 +74,7 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
 .side-panel{display:flex;flex-direction:column;gap:5px;}
 .btn-new{background:#f3f0e8;border:1px solid #e7e2d8;border-radius:7px;color:#44403c;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap;}
 .btn-setup{background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:7px;color:#fff;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap;}
+.btn-fullscreen{background:#f3f0e8;border:1px solid #e7e2d8;border-radius:7px;color:#44403c;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap;}
 .score-chip{background:#ffffff;border:1px solid #e7e2d8;border-radius:7px;padding:4px 8px;text-align:center;}
 .score-chip-label{font-size:.58rem;color:#a8a29e;}
 .score-chip-val{font-size:.95rem;font-weight:700;color:#b45309;}
@@ -174,7 +175,10 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
   <!-- 상태바 -->
   <div class="status-bar" id="status-bar">
     <div id="status-left" style="display:flex;align-items:center;gap:6px;font-weight:600;">🔴 당신의 차례</div>
-    <div style="font-size:.68rem;color:#4b5563;" id="move-count-el">0수</div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div style="font-size:.68rem;color:#4b5563;" id="move-count-el">0수</div>
+      <button class="btn-fullscreen" id="btn-fs" onclick="toggleFullscreen()" title="전체화면">⛶</button>
+    </div>
   </div>
 
   <!-- 장기판 -->
@@ -222,8 +226,8 @@ const cx = c => PAD+c*CELL, cy = r => PAD+r*CELL;
 const NS = 'http://www.w3.org/2000/svg';
 
 // 기물 크기 등급
-const PIECE_SIZE = { 궁:22, 차:18, 포:17, 마:16, 상:15, 사:14, 졸:13, 병:13 };
-const PIECE_FONT = { 궁:13, 차:11, 포:11, 마:11, 상:10, 사:10, 졸:10, 병:10 };
+const PIECE_SIZE = { 궁:16, 차:14, 포:13, 마:12, 상:12, 사:11, 졸:10, 병:10 };
+const PIECE_FONT = { 궁:11, 차:9, 포:9, 마:9, 상:9, 사:8, 졸:8, 병:8 };
 const PIECE_COLOR_CHO = { 궁:'#b91c1c', 차:'#c2410c', 포:'#c2410c', 마:'#b45309', 상:'#a16207', 사:'#9a3412', 졸:'#9a3412', 병:'#9a3412' };
 const PIECE_COLOR_HAN = { 궁:'#1e3a8a', 차:'#1d4ed8', 포:'#1d4ed8', 마:'#2563eb', 상:'#2563eb', 사:'#3b82f6', 졸:'#3b82f6', 병:'#3b82f6' };
 
@@ -552,7 +556,7 @@ function calcBoardSize(){
   const cellByW = maxW/(8+2*PAD_RATIO);
   const cellByH = maxH/(9+2*PAD_RATIO);
   let cell = Math.floor(Math.min(cellByW, cellByH));
-  cell = Math.max(26, Math.min(cell, 80));
+  cell = Math.max(24, Math.min(cell, 60));
 
   CELL = cell;
   PAD = Math.round(cell*PAD_RATIO);
@@ -1072,6 +1076,23 @@ function goSetup(){
 
 // 오버레이 클릭 → 새 게임
 document.getElementById('overlay').addEventListener('click',resetGame);
+
+// ── 전체화면 ──
+function toggleFullscreen(){
+  const btn = document.getElementById('btn-fs');
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(()=>{});
+    if(btn) btn.textContent='✕';
+  } else {
+    document.exitFullscreen().catch(()=>{});
+    if(btn) btn.textContent='⛶';
+  }
+}
+document.addEventListener('fullscreenchange',()=>{
+  const btn=document.getElementById('btn-fs');
+  if(btn) btn.textContent=document.fullscreenElement?'✕':'⛶';
+  setTimeout(scheduleRelayout,300);
+});
 
 // ── 초기화 ──
 score=0;wins=0;losses=0;
