@@ -827,7 +827,7 @@ function updateUI(){
   if(gameLog.length===0){lb.innerHTML='<div class="log-empty">기보가 여기에 표시됩니다</div>';}
   else{lb.innerHTML=gameLog.map((l,i)=>`<div class="log-entry" style="color:${i===0?'#1c1917':'#a8a29e'}">${l}</div>`).join('');}
 
-  layoutBoard();
+  if(_isFullscreen) renderBoard(); else layoutBoard();
 }
 // ════════════════════════════════════════════
 function showJanggun(playerIsInCheck){
