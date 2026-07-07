@@ -400,6 +400,23 @@ function getMoves(bd,r,c){
       if(!fs)continue;
       while(inB(nr,nc)){if(bd[nr][nc]){if(getSide(bd[nr][nc])!==side&&pn(bd[nr][nc])!=='포')moves.push([nr,nc]);break;}moves.push([nr,nc]);nr+=dr;nc+=dc;}
     }
+    // 궁성 대각선 포 이동 (모서리↔모서리, 중앙을 넘어야 함)
+    const palaceDiags=[
+      [[0,3],[1,4],[2,5]],[[0,5],[1,4],[2,3]],
+      [[7,3],[8,4],[9,5]],[[7,5],[8,4],[9,3]]
+    ];
+    for(const diag of palaceDiags){
+      for(const i of[0,2]){
+        const sr=diag[i][0],sc=diag[i][1];
+        if(sr!==r||sc!==c)continue;
+        const other=i===0?2:0;
+        const mr=diag[1][0],mc=diag[1][1],fr=diag[other][0],fc=diag[other][1];
+        const mid=bd[mr][mc];
+        if(!mid||pn(mid)==='포')continue;
+        const far=bd[fr][fc];
+        if(!far||(getSide(far)!==side&&pn(far)!=='포'))moves.push([fr,fc]);
+      }
+    }
   }
   else if(name==='마'){
     for(const[b,e]of[[[-1,0],[-2,-1]],[[-1,0],[-2,1]],[[1,0],[2,-1]],[[1,0],[2,1]],[[0,-1],[-1,-2]],[[0,-1],[1,-2]],[[0,1],[-1,2]],[[0,1],[1,2]]]){
