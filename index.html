@@ -9,7 +9,7 @@
 body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;min-height:100vh;overflow-x:hidden;}
 
 /* ── 오버레이 ── */
-#overlay{position:fixed;inset:0;z-index:200;background:#000000dd;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+#overlay{position:fixed;inset:0;z-index:10060;background:#000000dd;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
 #overlay.show{display:flex;}
 .res-emoji{font-size:5rem;animation:bounce 0.6s ease;}
 @keyframes bounce{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
@@ -19,9 +19,16 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
 .res-hint{color:#6b7280;font-size:.8rem;margin-top:4px;}
 
 /* ── 장군 알림 ── */
-#janggun-alert{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:150;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:3px solid #ef4444;border-radius:20px;padding:20px 40px;text-align:center;font-size:2rem;font-weight:900;color:#fff;text-shadow:0 0 20px #ef4444;box-shadow:0 0 40px #ef444480;transition:transform 0.3s,opacity 0.3s;opacity:0;}
+#janggun-alert{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:10050;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:3px solid #ef4444;border-radius:20px;padding:20px 40px;text-align:center;font-size:2rem;font-weight:900;color:#fff;text-shadow:0 0 20px #ef4444;box-shadow:0 0 40px #ef444480;transition:transform 0.3s,opacity 0.3s;opacity:0;}
 #janggun-alert.show{transform:translate(-50%,-50%) scale(1);opacity:1;}
 #janggun-alert.ai{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-color:#3b82f6;box-shadow:0 0 40px #3b82f680;}
+
+/* ── 전체화면 추임새 배너 (누구 차례/장군·멍군/승패를 알려줌) ── */
+#fs-chuimsae{position:fixed;top:14px;left:50%;transform:translate(-50%,-8px);z-index:10040;background:#000000b0;backdrop-filter:blur(4px);border:1px solid #ffffff33;border-radius:999px;padding:8px 20px;font-size:1rem;font-weight:800;color:#fff;letter-spacing:.04em;white-space:nowrap;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;box-shadow:0 4px 16px #00000060;}
+#fs-chuimsae.show{opacity:1;transform:translate(-50%,0);}
+#fs-chuimsae.check{color:#fca5a5;border-color:#ef444488;animation:pulse-red 1s infinite;}
+#fs-chuimsae.check-ai{color:#93c5fd;border-color:#3b82f688;}
+#fs-chuimsae.think{color:#fcd34d;}
 
 /* ── 말 선택 화면 ── */
 #setup-screen{position:fixed;inset:0;z-index:100;background:#f7f5f0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;}
@@ -31,6 +38,21 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
 .setup-board{position:relative;margin:0 auto;}
 .setup-info{background:#ffffff;border:1px solid #e7e2d8;border-radius:10px;padding:10px 14px;width:100%;max-width:380px;margin-top:10px;font-size:.75rem;color:#6b6256;text-align:center;box-shadow:0 1px 3px #00000010;}
 .setup-btn{background:linear-gradient(135deg,#b45309,#d97706);border:none;border-radius:10px;color:#fff;padding:12px 32px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:10px;letter-spacing:.05em;width:100%;max-width:380px;}
+.setup-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ── 대전 상대 선택 / 온라인 연결 UI ── */
+.mode-row{display:flex;gap:8px;}
+.mode-btn{flex:1;padding:10px 8px;border-radius:8px;border:1.5px solid #e7e2d8;background:#fff;color:#78716c;font-size:.8rem;font-weight:700;cursor:pointer;}
+.mode-btn.active{border-color:#b45309;background:#fef3c7;color:#b45309;}
+.online-tab-row{display:flex;gap:6px;margin-top:10px;}
+.online-tab{flex:1;padding:7px;border-radius:6px;border:1px solid #e7e2d8;background:#f7f5f0;color:#78716c;font-size:.72rem;font-weight:700;cursor:pointer;}
+.online-tab.active{border-color:#7c3aed;background:#ede9fe;color:#7c3aed;}
+.room-code-box{margin-top:10px;text-align:center;background:#1a1a2e;border-radius:10px;padding:14px;}
+.room-code-val{font-size:1.8rem;font-weight:900;color:#fbbf24;letter-spacing:.25em;}
+.online-status{margin-top:8px;font-size:.72rem;color:#6b6256;text-align:center;min-height:16px;}
+.join-input-row{display:flex;gap:6px;margin-top:10px;}
+.join-input-row input{flex:1;padding:9px 10px;border:1px solid #d6cfc0;border-radius:7px;font-size:.9rem;letter-spacing:.15em;text-align:center;text-transform:uppercase;background:#fff;color:#1c1917;}
+.join-btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:7px;color:#fff;padding:0 16px;font-size:.8rem;font-weight:700;cursor:pointer;}
 
 /* ── 메인 게임 ── */
 #game-screen{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:8px 6px 20px;}
@@ -80,6 +102,7 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
 .score-chip-val{font-size:.95rem;font-weight:700;color:#b45309;}
 </style>
 </head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"></script>
 <body>
 
 <!-- 장군 알림 -->
@@ -106,6 +129,38 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
   <svg id="setup-svg" style="display:block;margin:0 auto;cursor:pointer;"></svg>
   <div class="setup-info" id="setup-info">마(馬)와 상(象)의 위치를 선택하세요.<br>현재 선택: <span id="setup-sel-label" style="color:#b45309;font-weight:700;">마상상마 (기본)</span></div>
 
+  <div class="setup-info" id="mode-box" style="text-align:left;">
+    <div style="font-size:.8rem;color:#44403c;font-weight:700;margin-bottom:8px;">🎮 대전 상대</div>
+    <div class="mode-row">
+      <button type="button" class="mode-btn active" id="mode-btn-ai" onclick="selectMode('ai')">🤖 AI와 대전</button>
+      <button type="button" class="mode-btn" id="mode-btn-online" onclick="selectMode('online')">🌐 친구와 온라인 2인</button>
+    </div>
+
+    <div id="online-panel" style="display:none;">
+      <div class="online-tab-row">
+        <button type="button" class="online-tab active" id="tab-host" onclick="selectOnlineTab('host')">🎲 방 만들기</button>
+        <button type="button" class="online-tab" id="tab-join" onclick="selectOnlineTab('join')">🔑 코드로 참가</button>
+      </div>
+
+      <div id="host-tab-body">
+        <button class="setup-btn" style="margin-top:10px;background:linear-gradient(135deg,#7c3aed,#6d28d9);" onclick="createRoom()" id="create-room-btn">방 만들기</button>
+        <div class="room-code-box" id="room-code-box" style="display:none;">
+          <div style="font-size:.65rem;color:#a8a29e;margin-bottom:4px;">이 코드를 친구에게 알려주세요</div>
+          <div class="room-code-val" id="room-code-display">----</div>
+        </div>
+      </div>
+
+      <div id="join-tab-body" style="display:none;">
+        <div class="join-input-row">
+          <input type="text" id="join-code-input" placeholder="코드 입력" maxlength="4">
+          <button class="join-btn" onclick="joinRoom()">참가</button>
+        </div>
+      </div>
+
+      <div class="online-status" id="online-status"></div>
+    </div>
+  </div>
+
   <div class="setup-info" id="gemini-box" style="text-align:left;">
     <label style="display:flex;align-items:center;gap:7px;font-size:.8rem;color:#44403c;cursor:pointer;font-weight:600;">
       <input type="checkbox" id="gemini-toggle" onchange="toggleGemini(this.checked)" style="width:16px;height:16px;accent-color:#7c3aed;">
@@ -126,7 +181,7 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
     </div>
   </div>
 
-  <button class="setup-btn" onclick="startGame()">⚔️ 대전 시작</button>
+  <button class="setup-btn" id="setup-btn" onclick="startGame()">⚔️ 대전 시작</button>
 </div>
 
 <!-- 게임 화면 -->
@@ -154,13 +209,13 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
     <div class="progress-track"><div class="progress-bar" id="prog-bar"></div></div>
   </div>
 
-  <!-- AI 패널 -->
+  <!-- AI/상대 패널 -->
   <div class="player-panel" style="background:#eff6ff;border:1px solid #bfdbfe;">
     <div class="panel-left">
-      <div class="panel-avatar" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border:2px solid #3b82f6;">🤖</div>
+      <div class="panel-avatar" id="top-panel-avatar" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border:2px solid #3b82f6;">🤖</div>
       <div>
-        <div class="panel-name" style="color:#1d4ed8;">AI 장군</div>
-        <div class="panel-side">한(漢) · 파란색 · <span id="ai-level-label"></span></div>
+        <div class="panel-name" id="top-panel-name" style="color:#1d4ed8;">AI 장군</div>
+        <div class="panel-side" id="top-panel-side">한(漢) · 파란색 · <span id="ai-level-label"></span></div>
       </div>
     </div>
     <div style="text-align:right;">
@@ -188,6 +243,8 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
     <button id="fs-close-btn" onclick="toggleFullscreen()"
       style="display:none;position:absolute;top:8px;right:8px;z-index:10000;background:#00000088;border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:18px;cursor:pointer;line-height:1;">✕</button>
   </div>
+  <!-- 전체화면 추임새 배너: 누구 차례인지/장군·멍군/승패를 알려줌 -->
+  <div id="fs-chuimsae"></div>
 
   <!-- 내가 잡은 기물 -->
   <div class="cap-row" id="cap-by-player"></div>
@@ -197,8 +254,8 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
     <div class="panel-left">
       <div class="panel-avatar" id="player-avatar" style="border:2px solid #d6d3d1;"></div>
       <div>
-        <div class="panel-name" style="color:#dc2626;">나 (플레이어)</div>
-        <div class="panel-side">초(楚) · 붉은색</div>
+        <div class="panel-name" id="bottom-panel-name" style="color:#dc2626;">나 (플레이어)</div>
+        <div class="panel-side" id="bottom-panel-side">초(楚) · 붉은색</div>
       </div>
     </div>
     <div style="text-align:right;">
@@ -212,6 +269,7 @@ body{background:#f7f5f0;color:#2d2a24;font-family:'Noto Sans KR','Apple SD Gothi
     <div class="side-panel">
       <button class="btn-new" onclick="resetGame()">↺ 새 게임</button>
       <button class="btn-setup" onclick="goSetup()">⚙️ 배치</button>
+      <button class="btn-new" id="btn-resign" style="display:none;color:#dc2626;" onclick="resignOnline()">🏳️ 기권/나가기</button>
       <div class="score-chip">
         <div class="score-chip-label">총 점수</div>
         <div class="score-chip-val" id="total-score-el">0</div>
@@ -262,14 +320,14 @@ const SETUP_OPTIONS = [
 ];
 
 const LEVELS = [
-  {min:0,  label:'입문', icon:'🥋',color:'#9ca3af',depth:1},
-  {min:20, label:'초보', icon:'🪖',color:'#78716c',depth:1},
-  {min:60, label:'하수', icon:'⚔️',color:'#d97706',depth:2},
-  {min:130,label:'중수', icon:'🛡️',color:'#059669',depth:2},
-  {min:220,label:'고수', icon:'🏹',color:'#0284c7',depth:3},
-  {min:360,label:'명인', icon:'💠',color:'#6366f1',depth:3},
-  {min:540,label:'국수', icon:'🌟',color:'#7c3aed',depth:4},
-  {min:800,label:'기성', icon:'👑',color:'#d97706',depth:4},
+  {min:0,  label:'입문', icon:'🥋',color:'#9ca3af',depth:1,time:600},
+  {min:20, label:'초보', icon:'🪖',color:'#78716c',depth:2,time:700},
+  {min:60, label:'하수', icon:'⚔️',color:'#d97706',depth:3,time:900},
+  {min:130,label:'중수', icon:'🛡️',color:'#059669',depth:3,time:1300},
+  {min:220,label:'고수', icon:'🏹',color:'#0284c7',depth:4,time:1700},
+  {min:360,label:'명인', icon:'💠',color:'#6366f1',depth:5,time:2200},
+  {min:540,label:'국수', icon:'🌟',color:'#7c3aed',depth:6,time:2800},
+  {min:800,label:'기성', icon:'👑',color:'#d97706',depth:8,time:3500},
 ];
 function getLevel(s){let l=LEVELS[0];for(const x of LEVELS){if(s>=x.min)l=x;else break;}return l;}
 function getLevelIdx(s){let i=0;for(let j=0;j<LEVELS.length;j++){if(s>=LEVELS[j].min)i=j;else break;}return i;}
@@ -283,6 +341,14 @@ let setupChoice = 0; // 현재 선택된 배치
 let aiTimer = null;
 let useGemini = false;       // Gemini API를 AI로 사용할지 여부
 let geminiApiKey = '';       // 브라우저 메모리에만 보관 (저장되지 않음)
+
+// ── 온라인 2인 대전 상태 ──
+let onlineMode = false;      // true면 AI 대신 다른 사람과 온라인 대전
+let mySide = 'cho';          // 내가 조종하는 진영: 'cho'(초/붉은) 또는 'han'(한/파랑)
+let isHost = false;          // 방을 만든 쪽인지 여부
+let peer = null, conn = null;
+let onlineTab = 'host';
+let onlineConnected = false;
 
 // ════════════════════════════════════════════
 // 말 배치 화면
@@ -335,6 +401,125 @@ function renderSetup(){
   });
   document.getElementById('setup-sel-label').textContent=SETUP_OPTIONS[setupChoice].label;
 }
+
+// ════════════════════════════════════════════
+// 온라인 2인 대전 (PeerJS 기반 P2P, 서버 없이 코드로 직접 연결)
+// ════════════════════════════════════════════
+function selectMode(mode){
+  onlineMode = (mode==='online');
+  document.getElementById('mode-btn-ai').classList.toggle('active',!onlineMode);
+  document.getElementById('mode-btn-online').classList.toggle('active',onlineMode);
+  document.getElementById('online-panel').style.display = onlineMode?'block':'none';
+  document.getElementById('gemini-box').style.display = onlineMode?'none':'block';
+  updateSetupBtnState();
+  if(!onlineMode){ teardownConnection(); }
+}
+function selectOnlineTab(tab){
+  onlineTab = tab;
+  document.getElementById('tab-host').classList.toggle('active',tab==='host');
+  document.getElementById('tab-join').classList.toggle('active',tab==='join');
+  document.getElementById('host-tab-body').style.display = tab==='host'?'block':'none';
+  document.getElementById('join-tab-body').style.display = tab==='join'?'block':'none';
+}
+function setOnlineStatus(msg){ document.getElementById('online-status').textContent=msg; }
+function updateSetupBtnState(){
+  const btn=document.getElementById('setup-btn');
+  if(!onlineMode){ btn.disabled=false; btn.textContent='⚔️ 대전 시작'; return; }
+  if(isHost){
+    btn.disabled = !onlineConnected;
+    btn.textContent = onlineConnected ? '⚔️ 대전 시작' : '⏳ 상대 접속 대기 중...';
+  }else{
+    btn.disabled = true;
+    btn.textContent = onlineConnected ? '⏳ 호스트가 시작하길 기다리는 중...' : '⏳ 연결 중...';
+  }
+}
+function genCode(){
+  const chars='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  let s=''; for(let i=0;i<4;i++)s+=chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+function teardownConnection(){
+  try{ if(conn)conn.close(); }catch(e){}
+  try{ if(peer)peer.destroy(); }catch(e){}
+  conn=null; peer=null; isHost=false; onlineConnected=false;
+  document.getElementById('room-code-box').style.display='none';
+  setOnlineStatus('');
+  updateSetupBtnState();
+}
+function createRoom(){
+  teardownConnection();
+  isHost=true; mySide='cho';
+  setOnlineStatus('방을 여는 중...');
+  const code=genCode();
+  peer=new Peer('janggi-room-'+code);
+  peer.on('open',()=>{
+    document.getElementById('room-code-display').textContent=code;
+    document.getElementById('room-code-box').style.display='block';
+    setOnlineStatus('상대의 접속을 기다리는 중...');
+    updateSetupBtnState();
+  });
+  peer.on('connection',c=>{
+    conn=c;
+    wireConnection();
+    conn.on('open',()=>{
+      onlineConnected=true;
+      setOnlineStatus('✅ 상대가 접속했습니다! 배치를 고르고 대전을 시작하세요.');
+      updateSetupBtnState();
+    });
+  });
+  peer.on('error',()=>{ setOnlineStatus('⚠️ 방을 여는 데 실패했습니다. 다시 시도해주세요.'); });
+}
+function joinRoom(){
+  const code=document.getElementById('join-code-input').value.trim().toUpperCase();
+  if(!code||code.length<4){ setOnlineStatus('4자리 코드를 입력해주세요.'); return; }
+  teardownConnection();
+  isHost=false; mySide='han';
+  setOnlineStatus('연결하는 중...');
+  peer=new Peer();
+  peer.on('open',()=>{
+    conn=peer.connect('janggi-room-'+code,{reliable:true});
+    wireConnection();
+    conn.on('open',()=>{
+      onlineConnected=true;
+      setOnlineStatus('✅ 연결됨! 호스트가 대전을 시작하길 기다리는 중...');
+      updateSetupBtnState();
+    });
+  });
+  peer.on('error',()=>{ setOnlineStatus('⚠️ 연결에 실패했습니다. 코드를 확인해주세요.'); });
+}
+function wireConnection(){
+  conn.on('data',handlePeerData);
+  conn.on('close',()=>{
+    onlineConnected=false;
+    if(document.getElementById('game-screen').classList.contains('show') && !gameOver){
+      addLog('⚠️ 상대와의 연결이 끊어졌습니다.');
+      gameOver=true; updateUI();
+    }
+    setOnlineStatus('⚠️ 연결이 끊어졌습니다.');
+    updateSetupBtnState();
+  });
+}
+function handlePeerData(msg){
+  if(msg.type==='start'){
+    setupChoice=msg.setupChoice;
+    startGame();
+  }else if(msg.type==='move'){
+    applyRemoteMove(msg.from,msg.to);
+  }else if(msg.type==='resign'){
+    if(!gameOver){
+      wins++;score+=50;gameOver=true;addLog('🏳️ 상대가 기권했습니다.');updateUI();showResult('win');
+    }
+  }
+}
+function resignOnline(){
+  if(onlineMode && conn && conn.open && !gameOver){
+    conn.send({type:'resign'});
+    losses++;score=Math.max(0,score-20);gameOver=true;updateUI();
+  }
+  teardownConnection();
+  goSetup();
+}
+function oppSide(){ return mySide==='cho'?'han':'cho'; }
 
 function buildBoard(choiceIdx){
   const b=Array(10).fill(null).map(()=>Array(9).fill(null));
@@ -467,8 +652,12 @@ function getAllLegal(bd,side){
 
 // ── AI ──
 const PV={차:130,포:70,마:50,상:30,사:30,졸:20,병:20,궁:10000};
+// 궁성 근처 수비 보너스용 좌표
+const CHO_PALACE=[[7,3],[7,4],[7,5],[8,3],[8,4],[8,5],[9,3],[9,4],[9,5]];
+const HAN_PALACE=[[0,3],[0,4],[0,5],[1,3],[1,4],[1,5],[2,3],[2,4],[2,5]];
 function evaluate(bd){
   let s=0;
+  let choGuards=0, hanGuards=0;
   for(let r=0;r<10;r++)for(let c=0;c<9;c++){
     const p=bd[r][c];if(!p)continue;
     const name=pn(p);
@@ -484,8 +673,40 @@ function evaluate(bd){
     if(name==='병')s+=isCho?0:r*1.5;
     // 차 중앙 컬럼 보너스
     if(name==='차'&&c>=3&&c<=5)s+=isCho?-3:3;
+    // 사/궁이 궁성을 지키고 있으면 수비 보너스
+    if(name==='사'){ if(isCho)choGuards++; else hanGuards++; }
+    // 포/마/상은 궁성 근처(자기 진영)에 남아 수비하면 소폭 보너스, 너무 소극적이면 감점 방지용으로 작게
+    if(name==='마'||name==='상'){
+      s+=isCho?-mob*0.3:mob*0.3; // 기동성 가중치 살짝 추가
+    }
   }
+  // 궁 수비(사) 보너스: 사가 살아있으면 그 편에 유리
+  s -= choGuards*4;
+  s += hanGuards*4;
   return s;
+}
+// 캡처만 계속 두는 정지 탐색(quiescence): 수평선 효과(호라이즌) 완화
+function quiescence(bd,alpha,beta,maximizing,qdepth){
+  const stand=evaluate(bd);
+  if(qdepth<=0) return stand;
+  if(maximizing){
+    if(stand>=beta)return stand;
+    if(stand>alpha)alpha=stand;
+  }else{
+    if(stand<=alpha)return alpha;
+    if(stand<beta)beta=stand;
+  }
+  if(performance.now()>aiDeadline)throw TIME_UP;
+  const side=maximizing?'han':'cho';
+  const all=getAllLegal(bd,side);
+  const caps=all.filter(m=>bd[m.to[0]][m.to[1]]!==null);
+  const sorted=sortMoves(bd,caps);
+  for(const m of sorted){
+    const val=quiescence(applyMove(bd,m.from,m.to),alpha,beta,!maximizing,qdepth-1);
+    if(maximizing){ if(val>alpha)alpha=val; if(alpha>=beta)return alpha; }
+    else{ if(val<beta)beta=val; if(beta<=alpha)return beta; }
+  }
+  return maximizing?alpha:beta;
 }
 // 수 정렬 (캡처 먼저 → 가지치기 효율 향상)
 function sortMoves(bd,moves){
@@ -499,7 +720,7 @@ let aiDeadline = Infinity;
 const TIME_UP = Symbol('time_up');
 function minimax(bd,depth,alpha,beta,maximizing){
   if(performance.now()>aiDeadline)throw TIME_UP;
-  if(depth===0)return{score:evaluate(bd)};
+  if(depth===0)return{score:quiescence(bd,alpha,beta,maximizing,4)};
   const side=maximizing?'han':'cho';
   const moves=sortMoves(bd,getAllLegal(bd,side));
   if(moves.length===0)return{score:maximizing?-99999:99999};
@@ -674,7 +895,7 @@ function renderBoard(){
   // 이동 가능 표시
   legalMoves.forEach(([r,c])=>{
     const piece=board[r][c];
-    if(piece&&getSide(piece)==='han'){
+    if(piece&&getSide(piece)===oppSide()){
       // 적 기물 - 빨간 링
       svg.appendChild(el('circle',{cx:cx(c),cy:cy(r),r:PIECE_SIZE[pn(piece)]||14,fill:'none',stroke:'#ff4444','stroke-width':2.5,'stroke-dasharray':'3 2',opacity:.95}));
     }else{
@@ -791,16 +1012,36 @@ function updateUI(){
   icon.textContent=lv.icon;icon.style.background=`linear-gradient(135deg,${lv.color}44,${lv.color}22)`;icon.style.border=`2px solid ${lv.color}`;
   document.getElementById('lv-name').textContent=lv.label;document.getElementById('lv-name').style.color=lv.color;
   document.getElementById('lv-pts').textContent=`${score}점 · ${wins}승 ${losses}패`;
-  document.getElementById('ai-level-label').textContent=useGemini?'🔮 Gemini':lv.label+' AI';
+
+  // 패널 라벨/아바타 (온라인 모드 및 내가 초/한 어느 쪽인지에 따라 동적으로 갱신)
+  const iAmCho = mySide==='cho';
+  document.getElementById('bottom-panel-name').textContent = iAmCho ? '나 (플레이어)' : (onlineMode?'상대방':'나');
+  document.getElementById('top-panel-name').textContent = !iAmCho ? '나 (플레이어)' : (onlineMode?'상대방':'AI 장군');
+  const topSide=document.getElementById('top-panel-side');
+  const topAvatarEl=document.getElementById('top-panel-avatar');
+  if(onlineMode){
+    topSide.textContent='한(漢) · 파란색 · 온라인 상대';
+  }else{
+    topSide.textContent='한(漢) · 파란색 · '+(useGemini?'🔮 Gemini':lv.label+' AI');
+  }
+  if(!iAmCho){
+    topAvatarEl.textContent=lv.icon;topAvatarEl.style.background=`linear-gradient(135deg,${lv.color}44,${lv.color}22)`;topAvatarEl.style.border=`2px solid ${lv.color}`;
+  }else{
+    topAvatarEl.textContent=onlineMode?'🧑':'🤖';topAvatarEl.style.background='linear-gradient(135deg,#dbeafe,#bfdbfe)';topAvatarEl.style.border='2px solid #3b82f6';
+  }
 
   // 프로그레스
   document.getElementById('prog-cur-label').textContent=`${lv.label} ${lv.min}점`;
   document.getElementById('prog-next-label').textContent=nextLv?`다음: ${nextLv.icon}${nextLv.label} (${nextLv.min}점)`:'최고 레벨!';
   const pb=document.getElementById('prog-bar');pb.style.width=prog+'%';pb.style.background=`linear-gradient(90deg,${lv.color},${lv.color}bb)`;
 
-  // 플레이어 아바타
+  // 플레이어(하단) 아바타
   const pav=document.getElementById('player-avatar');
-  pav.textContent=lv.icon;pav.style.background=`linear-gradient(135deg,${lv.color}33,${lv.color}11)`;pav.style.borderColor=lv.color;
+  if(iAmCho){
+    pav.textContent=lv.icon;pav.style.background=`linear-gradient(135deg,${lv.color}33,${lv.color}11)`;pav.style.borderColor=lv.color;
+  }else{
+    pav.textContent=onlineMode?'🧑':'🤖';pav.style.background='#e7e2d8';pav.style.borderColor='#a8a29e';
+  }
 
   // 점수
   const pScore=capByPlayer.reduce((s,p)=>s+(PIECE_INFO[p]?.value||0),0);
@@ -824,21 +1065,38 @@ function updateUI(){
   const sb=document.getElementById('status-bar');
   const sl=document.getElementById('status-left');
   sb.className='status-bar';
+  let chuimText, chuimCls;
+  const owner=(playerTurn==='cho'||playerTurn==='check_me')?'cho':'han';
+  const ownerInCheck=(playerTurn==='check_me'||playerTurn==='check_ai');
+  const isMyTurnNow = owner===mySide;
+  const myColorEmoji = mySide==='cho' ? '🔴' : '🔵';
+  const oppColorEmoji = mySide==='cho' ? '🔵' : '🔴';
+  const oppLabel = onlineMode ? '상대' : 'AI';
   if(aiThinking){
     sl.innerHTML=useGemini
       ?'<span style="color:#7c3aed">🔮 Gemini 생각 중...</span>'
       :'<span style="color:#2563eb">🤔 AI 계산 중...</span>';
-  }else if(playerTurn==='check_me'){
-    sb.classList.add('check');
-    sl.innerHTML='⚠️ <span style="color:#dc2626;font-weight:700">장군!</span>';
-  }else if(playerTurn==='check_ai'){
-    sb.classList.add('check-ai');
-    sl.innerHTML='⚔️ <span style="color:#16a34a;font-weight:700">장군! 몰아붙이세요</span>';
+    chuimText=useGemini?'🔮 Gemini 생각 중...':'🤔 AI 생각 중...';chuimCls='think';
+  }else if(ownerInCheck){
+    if(isMyTurnNow){
+      sb.classList.add('check');
+      sl.innerHTML='⚠️ <span style="color:#dc2626;font-weight:700">장군!</span>';
+      chuimText='⚠️ 장군이오!';chuimCls='check';
+    }else{
+      sb.classList.add('check-ai');
+      sl.innerHTML=`⚔️ <span style="color:#16a34a;font-weight:700">${oppLabel}이(가) 장군에 몰렸습니다</span>`;
+      chuimText='⚔️ 멍군! 몰아붙이세요';chuimCls='check-ai';
+    }
   }else{
-    sl.innerHTML=playerTurn==='cho'||playerTurn==='check_me'
-      ?'🔴 <span style="color:#dc2626">당신의 차례</span>'
-      :'🔵 <span style="color:#2563eb">AI 차례...</span>';
+    sl.innerHTML=isMyTurnNow
+      ?`${myColorEmoji} <span style="color:#dc2626">당신의 차례</span>`
+      :`${oppColorEmoji} <span style="color:#2563eb">${oppLabel} 차례...</span>`;
+    chuimText=isMyTurnNow?`${myColorEmoji} 당신 차례요!`:`${oppColorEmoji} ${oppLabel} 차례요...`;chuimCls='';
   }
+  // 전체화면 추임새 배너 갱신 (전체화면일 때만 노출)
+  const fc=document.getElementById('fs-chuimsae');
+  fc.textContent=chuimText;
+  fc.className=_isFullscreen ? ('show'+(chuimCls?' '+chuimCls:'')) : '';
 
   // 로그
   const lb=document.getElementById('log-panel');
@@ -869,8 +1127,8 @@ function addLog(msg){gameLog.unshift(msg);if(gameLog.length>30)gameLog.pop();}
 
 function getStatusCode(bd,side){
   const moves=getAllLegal(bd,side);
-  if(moves.length===0)return side==='cho'?'lose':'win';
-  if(isInCheck(bd,side))return side==='cho'?'check_me':'check_ai';
+  if(moves.length===0)return'nomoves';
+  if(isInCheck(bd,side))return'check';
   return'ok';
 }
 
@@ -979,6 +1237,37 @@ async function getGeminiMove(bd, moves){
   return moves[idx];
 }
 
+// 한 수를 처리하는 공용 로직: side가 실제로 이동한 진영.
+// AI 모드에서는 항상 side='cho'(플레이어) 또는 'han'(AI).
+// 온라인 모드에서는 side가 mySide(내 이동) 또는 oppSide()(상대 이동)가 될 수 있음.
+function performMove(side,sr,sc,r,c){
+  const captured=board[r][c];
+  if(captured){
+    const pts=PIECE_INFO[captured]?.value||0;
+    if(side==='cho')capByPlayer.push(captured);else capByAI.push(captured);
+    const whoLabel = side===mySide ? '당신' : (onlineMode?'상대':'AI');
+    addLog(`${whoLabel}이(가) ${PIECE_INFO[captured]?.label}을(를) 잡았습니다`+(side===mySide?` (+${pts}점)`:''));
+    if(side===mySide)score+=pts;
+  }
+  board=applyMove(board,[sr,sc],[r,c]);
+  lastMove={from:[sr,sc],to:[r,c]};
+  moveCount++;
+  const opp=side==='cho'?'han':'cho';
+  const st=getStatusCode(board,opp);
+  if(st==='nomoves'){
+    if(side===mySide){wins++;score+=50;}else{losses++;score=Math.max(0,score-20);}
+    gameOver=true;updateUI();showResult(side===mySide?'win':'lose');return;
+  }
+  if(st==='check'){
+    playerTurn = opp==='cho' ? 'check_me' : 'check_ai';
+    showJanggun(opp===mySide);
+    addLog(opp===mySide ? '⚠️ 장군!' : '⚔️ 멍군!');
+  }else{
+    playerTurn=opp;
+  }
+  updateUI();
+}
+
 function runAI(){
   aiThinking=true;updateUI();
   aiTimer=setTimeout(async ()=>{
@@ -994,35 +1283,28 @@ function runAI(){
     if(!move){
       const lv=getLevel(score);
       const depth=lv.depth;
-      move=findBestMove(board,depth,1500).move; // 최대 1.5초 내 응답 보장
+      move=findBestMove(board,depth,lv.time||1500).move; // 레벨별 사고 시간 예산 내 응답 보장
     }
     aiThinking=false;
     if(move){
-      const captured=board[move.to[0]][move.to[1]];
-      if(captured){
-        capByAI.push(captured);
-        const pts=PIECE_INFO[captured]?.value||0;
-        addLog(`AI가 ${PIECE_INFO[captured]?.label}을(를) 잡았습니다`);
-      }
-      board=applyMove(board,move.from,move.to);
-      lastMove=move;
-      const s=getStatusCode(board,'cho');
-      if(s==='lose'){
-        losses++;score=Math.max(0,score-20);
-        gameOver=true;updateUI();showResult('lose');return;
-      }
-      if(s==='check_me'){playerTurn='check_me';showJanggun(true);}
-      else{playerTurn='cho';}
+      performMove('han',move.from[0],move.from[1],move.to[0],move.to[1]);
     }else{
       wins++;score+=50;gameOver=true;updateUI();showResult('win');return;
     }
-    updateUI();
   },100);
+}
+
+// 온라인 대전에서 상대가 보낸 수를 반영
+function applyRemoteMove(from,to){
+  if(gameOver)return;
+  aiThinking=false;
+  performMove(oppSide(),from[0],from[1],to[0],to[1]);
 }
 
 function handlePieceClick(r,c){
   if(gameOver||aiThinking)return;
-  const isMyTurn=playerTurn==='cho'||playerTurn==='check_me'||playerTurn==='check_ai';
+  const owner=(playerTurn==='cho'||playerTurn==='check_me')?'cho':'han';
+  const isMyTurn=owner===mySide;
   if(!isMyTurn)return;
 
   if(selected){
@@ -1033,7 +1315,7 @@ function handlePieceClick(r,c){
     }
   }
   // 내 기물 선택
-  if(getSide(board[r][c])==='cho'){
+  if(getSide(board[r][c])===mySide){
     selected=[r,c];legalMoves=getLegalMoves(board,r,c);updateUI();
   }else if(selected){
     selected=null;legalMoves=[];updateUI();
@@ -1042,7 +1324,8 @@ function handlePieceClick(r,c){
 
 function handleCellClick(r,c){
   if(gameOver||aiThinking)return;
-  const isMyTurn=playerTurn==='cho'||playerTurn==='check_me'||playerTurn==='check_ai';
+  const owner=(playerTurn==='cho'||playerTurn==='check_me')?'cho':'han';
+  const isMyTurn=owner===mySide;
   if(!isMyTurn||!selected)return;
   if(legalMoves.some(([mr,mc])=>mr===r&&mc===c)){
     const[sr,sc]=selected;
@@ -1053,54 +1336,57 @@ function handleCellClick(r,c){
 }
 
 function doMove(sr,sc,r,c){
-  const captured=board[r][c];
-  if(captured){
-    capByPlayer.push(captured);
-    const pts=PIECE_INFO[captured]?.value||0;
-    score+=pts;
-    addLog(`${PIECE_INFO[captured]?.label}을(를) 잡았습니다 (+${pts}점)`);
+  selected=null;legalMoves=[];
+  if(onlineMode && conn && conn.open){
+    conn.send({type:'move',from:[sr,sc],to:[r,c]});
   }
-  board=applyMove(board,[sr,sc],[r,c]);
-  lastMove={from:[sr,sc],to:[r,c]};
-  selected=null;legalMoves=[];moveCount++;
-  const s=getStatusCode(board,'han');
-  if(s==='win'){
-    wins++;score+=50;gameOver=true;updateUI();showResult('win');return;
+  performMove(mySide,sr,sc,r,c);
+  if(!onlineMode && !gameOver){
+    setTimeout(()=>runAI(),120);
   }
-  if(s==='check_ai'){playerTurn='check_ai';showJanggun(false);addLog('⚔️ 멍군!');}
-  else{playerTurn='han';}
-  updateUI();
-  setTimeout(()=>runAI(),120);
 }
 
 // ════════════════════════════════════════════
 // 화면 전환
 // ════════════════════════════════════════════
 function startGame(){
+  if(onlineMode && isHost && conn && conn.open){
+    conn.send({type:'start',setupChoice});
+  }
   board=buildBoard(setupChoice);
   selected=null;legalMoves=[];playerTurn='cho';aiThinking=false;lastMove=null;
   capByPlayer=[];capByAI=[];gameOver=false;moveCount=0;gameLog=[];
   document.getElementById('setup-screen').classList.add('hide');
   document.getElementById('game-screen').classList.add('show');
   document.getElementById('overlay').classList.remove('show');
+  document.getElementById('btn-resign').style.display = onlineMode?'block':'none';
   updateUI();
 }
 
 function resetGame(){
   clearTimeout(aiTimer);
+  if(onlineMode && !isHost){
+    setOnlineStatus('호스트만 새 게임을 시작할 수 있어요.');
+    return;
+  }
   startGame();
 }
 
 function goSetup(){
   clearTimeout(aiTimer);
+  if(onlineMode){ teardownConnection(); }
   document.getElementById('game-screen').classList.remove('show');
   document.getElementById('setup-screen').classList.remove('hide');
   document.getElementById('overlay').classList.remove('show');
+  selectMode(onlineMode?'online':'ai');
   renderSetup();
 }
 
 // 오버레이 클릭 → 새 게임
-document.getElementById('overlay').addEventListener('click',resetGame);
+document.getElementById('overlay').addEventListener('click',()=>{
+  if(onlineMode && !isHost) return; // 게스트는 새 게임을 직접 시작할 수 없음(호스트 대기)
+  resetGame();
+});
 
 // ── 전체화면 (CSS 방식, requestFullscreen 사용 안 함) ──
 let _fsCELL = 0, _fsPAD = 0, _fsBW = 0, _fsBH = 0;
@@ -1123,14 +1409,14 @@ function toggleFullscreen(){
     wrap.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#d9b87c;display:flex;align-items:center;justify-content:center;line-height:0;';
     if(closeBtn) closeBtn.style.display = 'block';
     if(btn) btn.textContent = '⛶';
-    renderBoard();
+    updateUI();
   } else {
     _isFullscreen = false;
     _fsCELL = 0;
     wrap.style.cssText = 'position:relative;line-height:0;';
     if(closeBtn) closeBtn.style.display = 'none';
     if(btn) btn.textContent = '⛶';
-    layoutBoard();
+    updateUI();
   }
 }
 
